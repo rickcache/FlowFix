@@ -1,0 +1,220 @@
+/* --- Import Poppins Font --- */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+/* --- Global Header Bar --- */
+.site-header {
+  background-color: #0b1a2f; /* Dark Blue */
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: "Poppins", sans-serif; /* Apply Poppins */
+}
+
+.header-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 15px 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-row.align-center {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Space between contact button and hamburger if both show */
+}
+
+.header-spacer {
+  height: 90px;
+}
+
+/* --- Logo (Circle matching the image) --- */
+.logo-circle {
+  width: 55px;
+  height: 55px;
+  background-color: #d9d9d9; /* Light gray from wireframe */
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+.logo-circle:hover {
+  transform: scale(1.05);
+}
+
+/* --- Desktop Nav --- */
+.desktop-nav ul {
+  list-style: none;
+  display: flex;
+  gap: 40px;
+  margin: 0;
+  padding: 0;
+}
+
+.desktop-nav a {
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 500; /* Clean, medium weight for Poppins */
+  transition: color 0.3s ease;
+}
+
+/* Specific color for the active "home" link based on your image */
+.desktop-nav a.active-link {
+  color: #2b7af0; /* Bright blue from the wireframe */
+}
+
+.desktop-nav a:hover {
+  color: #2b7af0;
+}
+
+/* --- Right Action Button (Contact Now) --- */
+.header-contact-btn {
+  background-color: #d9d9d9; /* Matches logo gray */
+  color: #0b1a2f; /* Dark text for contrast */
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 12px 35px;
+  border-radius: 50px; /* Fully rounded pill shape */
+  text-decoration: none;
+  transition:
+    background-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.header-contact-btn:hover {
+  background-color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* --- Hamburger Button --- */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 35px;
+  height: 25px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.hamburger-line {
+  width: 100%;
+  height: 3px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  transition: all 0.3s ease-in-out;
+}
+
+/* --- Sidebar Overlay --- */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s ease;
+  z-index: 1005;
+}
+
+/* --- Mobile Sidebar --- */
+.mobile-sidebar {
+  position: fixed;
+  top: 0;
+  right: -400px;
+  width: 350px;
+  max-width: 80%;
+  height: 100vh;
+  background-color: #dfdfdf;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+  z-index: 1010;
+  transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  font-family: "Poppins", sans-serif;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #b0b0b0;
+  padding-bottom: 15px;
+  margin-bottom: 30px;
+}
+
+.sidebar-header h2 {
+  margin: 0;
+  color: #0b1a2f;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.close-sidebar-btn {
+  background: none;
+  border: none;
+  font-size: 2.5rem;
+  color: #0b1a2f;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* --- Mobile Nav Links --- */
+.mobile-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.mobile-nav a {
+  text-decoration: none;
+  color: #0b1a2f;
+  font-size: 1.5rem;
+  font-weight: 600;
+  display: block;
+  transition: color 0.3s ease;
+}
+
+.mobile-nav a:hover {
+  color: #2b7af0;
+}
+
+/* --- JavaScript Active Classes --- */
+.sidebar-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-sidebar.active {
+  right: 0;
+}
+
+/* --- Responsive Breakpoints --- */
+@media (max-width: 1024px) {
+  /* Hide the button on smaller tablets/mobile to save space for the hamburger */
+  .header-contact-btn {
+    display: none;
+  }
+}
+
+@media (max-width: 992px) {
+  .desktop-nav {
+    display: none;
+  }
+  .hamburger-btn {
+    display: flex;
+  }
+}

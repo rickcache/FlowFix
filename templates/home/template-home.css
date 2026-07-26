@@ -1,0 +1,1218 @@
+/* --- HERO Section General --- */
+.home-hero {
+  position: relative;
+  width: 100%;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  color: #ffffff;
+  font-family: sans-serif;
+}
+
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+.hero-content-wrapper {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1400px; /* Widened to fit the larger cards comfortably */
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+/* --- Left Side Content --- */
+.hero-text-content {
+  flex: 1;
+  min-width: 300px;
+  max-width: 600px;
+  text-align: left; /* Ensuring strict left alignment */
+}
+
+.hero-title {
+  font-size: 4rem; /* Slightly larger to match image proportion */
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  line-height: 1.1;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+.text-blue {
+  color: #2b7af0; /* Matched the exact blue from the image */
+}
+
+.hero-btn {
+  display: inline-block;
+  padding: 12px 35px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 500;
+  border-radius: 50px; /* Pill shape */
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: background 0.3s ease;
+}
+
+.hero-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* --- Right Side Cards --- */
+.hero-trust-cards {
+  display: flex;
+  gap: 30px; /* Increased gap */
+  position: relative;
+  /* Removed the left: -1000px bug */
+  margin-left:;
+}
+
+.trust-card {
+  background: #e1e1e1;
+  width: 220px; /* Massively increased width */
+  height: 380px; /* Massively increased height */
+  border-radius: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Pushes the line to the bottom */
+  padding: 25px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+/* Staggering the cards downward to match the steep step effect */
+.card-1 {
+  margin-top: 0;
+}
+.card-2 {
+  margin-top: 90px;
+}
+.card-3 {
+  margin-top: 180px;
+}
+
+/* The Yellow Circle */
+.card-icon-placeholder {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 45px; /* Scaled up to match the bigger card */
+  height: 45px;
+  background-color: #dfcd15; /* Adjusted to match the exact image yellow */
+  border-radius: 50%;
+}
+
+/* The Horizontal Line near the bottom */
+.card-line {
+  width: 100%;
+  height: 2px;
+  background-color: #333; /* Darkened for visibility */
+  margin-bottom: 20px;
+}
+
+/* Responsive Cleanup */
+@media (max-width: 1024px) {
+  .hero-content-wrapper {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .hero-text-content {
+    text-align: center;
+  }
+
+  .hero-trust-cards {
+    justify-content: center;
+    margin-top: 3rem;
+  }
+
+  .card-1,
+  .card-2,
+  .card-3 {
+    margin-top: 0;
+  }
+}
+
+/* --- SERVICES Section General --- */
+.home-services {
+  background-color: #0b1a2f; /* Dark blue background from reference */
+  color: #ffffff;
+  padding: 4rem 0;
+  font-family: sans-serif;
+}
+
+.services-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* --- Header --- */
+.services-header {
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.title-underline {
+  width: 180px;
+  height: 4px;
+  background-color: #00b4d8; /* Cyan underline */
+  margin-top: 10px;
+}
+
+/* --- Service Cards (Global for 2x Hover) --- */
+.service-card {
+  position: relative;
+  background-color: #d9d9d9; /* Placeholder light gray */
+  border-radius: 12px;
+  overflow: hidden; /* Contains the 2x zoom */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card-img-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.card-img-wrapper img,
+.placeholder-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+/* The 2x Hover Effect Requested */
+.service-card:hover .card-img-wrapper img,
+.service-card:hover .placeholder-bg {
+  transform: scale(2);
+}
+
+.placeholder-bg {
+  background-color: #d9d9d9;
+}
+
+.view-all-link {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  color: #2196f3;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  z-index: 2;
+}
+
+.card-label {
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  margin: 0;
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.6); /* Makes text readable over images */
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+/* --- Top Grid Layout --- */
+.services-top-grid {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 3rem;
+  height: 300px;
+}
+
+.card-top-wide {
+  flex: 2.5;
+}
+
+.card-top-square {
+  flex: 1;
+}
+
+/* --- Middle Stats Banner --- */
+.stats-banner-wrapper {
+  display: flex;
+  width: 100%;
+  background-color: #d9d9d9; /* Left side trailing gray */
+  margin-bottom: 3rem;
+}
+
+.stats-left-gray {
+  width: 15%; /* Fills the left side before the curve */
+}
+
+.stats-main-cyan {
+  width: 85%;
+  background-color: #00b4d8; /* Vibrant cyan */
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 1.5rem 3rem;
+}
+
+.stat-block {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.stat-num {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.stat-text {
+  font-size: 0.8rem;
+  color: #fff;
+  text-transform: lowercase;
+}
+
+.stat-tagline {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  max-width: 250px;
+  line-height: 1.2;
+}
+
+.text-blue-light {
+  color: #0b1a2f; /* Darker blue text inside the cyan banner */
+}
+
+/* --- Bottom Grid Layout --- */
+.services-bottom-grid {
+  display: flex;
+  gap: 40px;
+}
+
+.bottom-left-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.bottom-right-col {
+  flex: 2.5;
+  display: flex;
+  gap: 20px;
+}
+
+/* Emergency CTA */
+.emergency-cta .cta-line {
+  width: 100px;
+  height: 2px;
+  background-color: #fff;
+  margin-bottom: 15px;
+}
+
+.emergency-cta h4 {
+  font-size: 1rem;
+  margin: 0 0 5px 0;
+  font-weight: normal;
+  text-transform: uppercase;
+}
+
+.emergency-cta h3 {
+  font-size: 1.5rem;
+  margin: 0 0 20px 0;
+}
+
+.btn-blue {
+  display: inline-block;
+  background-color: #2196f3;
+  color: #fff;
+  padding: 10px 25px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Bottom Cards Sizing */
+.card-bot-small {
+  height: 200px;
+  width: 80%; /* Match reference image width relative to column */
+}
+
+.card-bot-tall {
+  flex: 1;
+  height: 380px;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 992px) {
+  .services-top-grid,
+  .services-bottom-grid {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .bottom-right-col {
+    flex-direction: column;
+  }
+
+  .card-top-wide,
+  .card-top-square,
+  .card-bot-small,
+  .card-bot-tall {
+    width: 100%;
+    height: 250px;
+  }
+
+  .stats-main-cyan {
+    flex-wrap: wrap;
+    gap: 20px;
+    border-radius: 0;
+  }
+  .stats-left-gray {
+    display: none;
+  }
+}
+
+/* --- About Us Section --- */
+.home-about {
+  background-color: #f4f5f7; /* Off-white background */
+  padding: 5rem 0;
+  color: #0f2038;
+  font-family: sans-serif;
+}
+
+.about-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.about-header {
+  margin-bottom: 4rem;
+}
+
+/* --- Layout Grid --- */
+.about-grid {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.about-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* --- Image Boxes --- */
+.about-img-box {
+  position: relative;
+  border-radius: 12px;
+  width: 90%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.placeholder-blue {
+  background-color: #0f2038; /* Dark blue from reference */
+  width: 100%;
+  height: 100%;
+}
+
+.about-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Staggering alignments */
+.img-top-left {
+  align-self: flex-start;
+}
+
+.img-bot-right {
+  align-self: flex-end;
+  overflow: visible; /* To allow shadow to show */
+}
+
+/* Shadow effect for bottom right image */
+.img-shadow-bg {
+  position: absolute;
+  top: 15px;
+  right: -15px;
+  width: 100%;
+  height: 100%;
+  background-color: #d9d9d9;
+  border-radius: 12px;
+  z-index: 1;
+}
+
+.img-bot-right img,
+.img-bot-right .placeholder-blue {
+  position: relative;
+  z-index: 2;
+  border-radius: 12px;
+}
+
+/* --- Text Boxes --- */
+.about-text-box {
+  position: relative;
+  padding: 1rem 0;
+  width: 90%;
+}
+
+.about-text-box h3 {
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #0f2038;
+}
+
+.about-text-box p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* Vertical Borders */
+.border-left {
+  border-left: 3px solid #0f2038;
+  padding-left: 20px;
+  align-self: flex-start;
+}
+
+.border-right {
+  border-right: 3px solid #0f2038;
+  padding-right: 20px;
+  align-self: flex-end;
+}
+
+/* --- Timeline & Scrollable Area --- */
+.timeline-wrapper {
+  width: 90%;
+  align-self: flex-end;
+}
+
+.timeline-nav {
+  position: relative;
+  margin-bottom: 20px;
+  padding: 10px 0;
+}
+
+.timeline-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  height: 2px;
+  background-color: #0f2038;
+  z-index: 1;
+}
+
+.timeline-dots {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+}
+
+.timeline-dots .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #0f2038;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  padding: 0;
+}
+
+.timeline-dots .dot.active {
+  background-color: #00b4d8; /* Cyan active color */
+  transform: scale(1.2);
+}
+
+/* Scrollable Container */
+.scrollable-area {
+  height: 200px; /* Fixed height forces scrolling */
+  overflow-y: auto;
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: #00b4d8 #f4f5f7;
+}
+
+/* Hide scrollbar for Chrome/Safari/Edge but keep functionality */
+.scrollable-area::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollable-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollable-area::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 180, 216, 0.5);
+  border-radius: 10px;
+}
+
+.scroll-section {
+  margin-bottom: 2rem;
+}
+
+/* --- Responsive --- */
+@media (max-width: 992px) {
+  .about-grid {
+    flex-direction: column;
+  }
+
+  .about-col,
+  .about-img-box,
+  .about-text-box,
+  .timeline-wrapper {
+    width: 100%;
+    align-self: center;
+  }
+
+  .border-right {
+    border-right: none;
+    border-left: 3px solid #0f2038; /* Switch border side on mobile for consistency */
+    padding-right: 0;
+    padding-left: 20px;
+  }
+}
+
+/* --- Why Choose Us Section --- */
+.home-why-choose {
+  background: linear-gradient(
+    135deg,
+    #0b1a2f 40%,
+    #1a4b8c 100%
+  ); /* Dark blue with gradient accent */
+  color: #ffffff;
+  padding: 6rem 0;
+  font-family: sans-serif;
+}
+
+.why-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.why-layout {
+  display: flex;
+  gap: 50px;
+  align-items: center;
+}
+
+/* --- Left Side: Title --- */
+.why-title-col {
+  flex: 0 0 35%;
+  display: flex;
+  gap: 20px;
+  justify-content: flex-end; /* Pushes text towards the border in reference */
+}
+
+.title-border {
+  width: 4px;
+  background-color: #00b4d8; /* Cyan border */
+  border-radius: 2px;
+}
+
+.why-heading {
+  margin: 0;
+  font-size: 4.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+}
+
+.line-white {
+  color: #ffffff;
+}
+
+.line-cyan {
+  color: #00b4d8; /* Cyan text */
+}
+
+/* --- Right Side: Content & Grid --- */
+.why-content-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.why-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 150px 150px;
+  gap: 20px;
+}
+
+/* Image Boxes - Links */
+.why-box {
+  display: block;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden; /* Keeps zoomed image inside the rounded corners */
+  background-color: #d9d9d9;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Positioning based on CSS Grid */
+.box-wide {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+}
+
+.box-sq-1 {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+}
+
+.box-sq-2 {
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
+}
+
+.box-tall {
+  grid-column: 3 / 4;
+  grid-row: 1 / 3;
+}
+
+/* Image styling and Zoom Hover Effect */
+.why-box img,
+.placeholder-light {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+  display: block;
+}
+
+.placeholder-light {
+  background-color: #d9d9d9;
+}
+
+/* The Hover Trigger */
+.why-box:hover img,
+.why-box:hover .placeholder-light {
+  transform: scale(1.15); /* Zooms in when hovered */
+}
+
+/* --- Bottom Contact Info --- */
+.why-bottom-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.info-links {
+  display: flex;
+  gap: 30px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.info-item .arrow {
+  font-weight: normal;
+}
+
+.why-btn {
+  display: inline-block;
+  background-color: #d9d9d9;
+  color: transparent; /* Makes text invisible if you just want the blank pill shape */
+  padding: 12px 40px;
+  border-radius: 30px;
+  text-decoration: none;
+  min-width: 120px;
+  transition: background-color 0.3s ease;
+}
+
+.why-btn:hover {
+  background-color: #ffffff;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 992px) {
+  .why-layout {
+    flex-direction: column;
+  }
+
+  .why-title-col {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .why-heading {
+    text-align: left;
+    font-size: 3.5rem;
+  }
+
+  .why-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+  }
+
+  .box-wide {
+    grid-column: 1 / 3;
+    grid-row: 1 / 2;
+    height: 150px;
+  }
+
+  .box-sq-1 {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+    height: 150px;
+  }
+
+  .box-sq-2 {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    height: 150px;
+  }
+
+  .box-tall {
+    grid-column: 1 / 3;
+    grid-row: 3 / 4;
+    height: 200px;
+  }
+
+  .why-bottom-info {
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+  }
+}
+
+/* --- Process Section --- */
+.home-process {
+  background: linear-gradient(180deg, #dbe4ec 0%, #061c38 100%);
+  padding: 5rem 0;
+  font-family: sans-serif;
+  color: #ffffff;
+}
+
+.process-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.process-header {
+  margin-bottom: 3rem;
+}
+
+.process-header .section-title {
+  color: #061c38;
+  font-size: 2.5rem;
+  margin: 0;
+}
+
+.process-header .title-underline {
+  width: 120px;
+  height: 3px;
+  background-color: #00b4d8;
+  margin-top: 10px;
+}
+
+/* --- Interactive Timeline Area --- */
+.process-interactive-area {
+  position: relative;
+  max-width: 400px;
+  margin: 0 auto;
+  aspect-ratio: 1 / 2; /* Forces exactly the same proportion as our SVG viewBox */
+  width: 100%;
+}
+
+.process-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.process-steps-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+/* --- The Pill Boxes --- */
+.process-pill {
+  position: absolute;
+  width: 75%; /* 300px of the 400px viewBox */
+  left: 12.5%; /* Centers it exactly: 50px of 400px */
+  height: 12%; /* Scales based on container */
+  transform: translateY(
+    -50%
+  ); /* Centers vertically precisely on the Y coordinate */
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
+  padding: 0 10px; /* Padding for the inner circle space */
+}
+
+/* Vertical Stacking Coordinates */
+.step-1 {
+  top: 10%;
+  background-color: #007bff;
+  z-index: 5;
+} /* Bright Blue */
+.step-2 {
+  top: 30%;
+  background-color: #043673;
+  z-index: 4;
+}
+.step-3 {
+  top: 50%;
+  background-color: #032554;
+  z-index: 3;
+}
+.step-4 {
+  top: 70%;
+  background-color: #011636;
+  z-index: 2;
+}
+.step-5 {
+  top: 90%;
+  background-color: #000c1f;
+  z-index: 1;
+} /* Darkest */
+
+.process-pill:hover {
+  filter: brightness(1.2);
+}
+
+.process-pill.active {
+  transform: translateY(-50%) scale(1.05); /* Slight pop when active */
+}
+
+/* Pill text styling */
+.pill-text {
+  flex: 1;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 0 15px;
+  pointer-events: none; /* Let clicks pass to the parent pill */
+}
+
+/* Inner Alternating Circles */
+.pill-circle {
+  width: 25px;
+  height: 25px;
+  background-color: #e0e0e0;
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: inset -2px -2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Flex layout based on left/right position */
+.pill-right {
+  flex-direction: row; /* Text left, circle right */
+  justify-content: space-between;
+}
+
+.pill-left {
+  flex-direction: row; /* Circle left, text right */
+  justify-content: flex-start;
+}
+
+/* Responsive adjustment for text */
+@media (max-width: 500px) {
+  .pill-text {
+    font-size: 0.9rem;
+  }
+  .pill-circle {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* --- Featured Projects Section --- */
+.home-projects {
+  background-color: #0b1a2f; /* Deep blue background to match reference */
+  padding: 6rem 0 0 0; /* Padding top, 0 on bottom so the last image touches the edge if desired */
+  font-family: sans-serif;
+}
+
+.projects-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* --- Header --- */
+.projects-header {
+  margin-bottom: 4rem;
+}
+
+.projects-heading {
+  margin: 0;
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.block-text {
+  display: block;
+}
+
+/* --- Parallax Bands --- */
+.projects-parallax-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.parallax-band {
+  width: 100%;
+  height: 400px; /* Adjust this to change how tall the image strips are */
+
+  /* The core parallax properties */
+  background-attachment: fixed;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  /* Optional: Adds a slight tint to make the images look cohesive */
+  /* box-shadow: inset 0 0 0 1000px rgba(0, 180, 216, 0.2); Cyan tint */
+}
+
+/* The dark blue space between the images */
+.parallax-gap {
+  width: 100%;
+  height: 60px; /* Adjust the thickness of the gap */
+  background-color: #0b1a2f;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .projects-heading {
+    font-size: 2.5rem;
+  }
+
+  .parallax-band {
+    height: 250px; /* Slightly shorter bands on mobile */
+    /* Note: iOS Safari sometimes struggles with background-attachment: fixed. 
+           If it acts jittery on iPhones, uncomment the line below to disable parallax on mobile */
+    /* background-attachment: scroll; */
+  }
+
+  .parallax-gap {
+    height: 40px;
+  }
+}
+
+/* --- Testimonials Section --- */
+.home-testimonials {
+  background-color: #ffffff;
+  padding: 6rem 0;
+  font-family: sans-serif;
+  color: #0b1a2f; /* Deep blue text to match theme */
+}
+
+.testimonials-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* --- Header --- */
+.testi-header {
+  margin-bottom: 3rem;
+}
+
+.testi-heading {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+  color: #0b1a2f;
+}
+
+.testi-subheading {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* --- Testimonials Grid --- */
+.testi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-bottom: 4rem;
+}
+
+.testi-card {
+  border: 1px solid #0b1a2f;
+  aspect-ratio: 1 / 1; /* Makes them perfect squares */
+  position: relative;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.testi-content p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+  color: #333;
+}
+
+.testi-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* The dark circle in the bottom left */
+.profile-pic {
+  width: 50px;
+  height: 50px;
+  background-color: #0b1a2f; /* Fallback dark blue circle */
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.profile-pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* --- CTA Box --- */
+.testi-cta-box {
+  background-color: #0b1a2f; /* Deep dark blue */
+  border-radius: 25px;
+  padding: 3rem 4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #ffffff;
+}
+
+.cta-text h3 {
+  font-size: 2.2rem;
+  margin: 0 0 10px 0;
+  font-weight: 700;
+}
+
+.cta-text p {
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 300;
+}
+
+.btn-gray {
+  display: inline-block;
+  background-color: #d9d9d9;
+  color: #0b1a2f;
+  padding: 15px 40px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+}
+
+.btn-gray:hover {
+  background-color: #ffffff;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 992px) {
+  .testi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .testi-heading {
+    font-size: 2.5rem;
+  }
+
+  .testi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .testi-card {
+    aspect-ratio: auto;
+    min-height: 250px;
+  }
+
+  .testi-cta-box {
+    flex-direction: column;
+    text-align: center;
+    padding: 2.5rem 2rem;
+    gap: 30px;
+  }
+}

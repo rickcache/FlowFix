@@ -1,0 +1,208 @@
+
+/* --- About Us Section --- */
+.home-about {
+  background-color: #f4f5f7; /* Off-white background */
+  padding: 5rem 0;
+  color: #0f2038;
+  font-family: sans-serif;
+}
+
+.about-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.about-header {
+  margin-bottom: 4rem;
+}
+
+/* --- Layout Grid --- */
+.about-grid {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.about-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* --- Image Boxes --- */
+.about-img-box {
+  position: relative;
+  border-radius: 12px;
+  width: 90%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.placeholder-blue {
+  background-color: #0f2038; /* Dark blue from reference */
+  width: 100%;
+  height: 100%;
+}
+
+.about-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Staggering alignments */
+.img-top-left {
+  align-self: flex-start;
+}
+
+.img-bot-right {
+  align-self: flex-end;
+  overflow: visible; /* To allow shadow to show */
+}
+
+/* Shadow effect for bottom right image */
+.img-shadow-bg {
+  position: absolute;
+  top: 15px;
+  right: -15px;
+  width: 100%;
+  height: 100%;
+  background-color: #d9d9d9;
+  border-radius: 12px;
+  z-index: 1;
+}
+
+.img-bot-right img,
+.img-bot-right .placeholder-blue {
+  position: relative;
+  z-index: 2;
+  border-radius: 12px;
+}
+
+/* --- Text Boxes --- */
+.about-text-box {
+  position: relative;
+  padding: 1rem 0;
+  width: 90%;
+}
+
+.about-text-box h3 {
+  font-size: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #0f2038;
+}
+
+.about-text-box p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* Vertical Borders */
+.border-left {
+  border-left: 3px solid #0f2038;
+  padding-left: 20px;
+  align-self: flex-start;
+}
+
+.border-right {
+  border-right: 3px solid #0f2038;
+  padding-right: 20px;
+  align-self: flex-end;
+}
+
+/* --- Timeline & Scrollable Area --- */
+.timeline-wrapper {
+  width: 90%;
+  align-self: flex-end;
+}
+
+.timeline-nav {
+  position: relative;
+  margin-bottom: 20px;
+  padding: 10px 0;
+}
+
+.timeline-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  height: 2px;
+  background-color: #0f2038;
+  z-index: 1;
+}
+
+.timeline-dots {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+}
+
+.timeline-dots .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #0f2038;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  padding: 0;
+}
+
+.timeline-dots .dot.active {
+  background-color: #00b4d8; /* Cyan active color */
+  transform: scale(1.2);
+}
+
+/* Scrollable Container */
+.scrollable-area {
+  height: 200px; /* Fixed height forces scrolling */
+  overflow-y: auto;
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: #00b4d8 #f4f5f7;
+}
+
+/* Hide scrollbar for Chrome/Safari/Edge but keep functionality */
+.scrollable-area::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollable-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollable-area::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 180, 216, 0.5);
+  border-radius: 10px;
+}
+
+.scroll-section {
+  margin-bottom: 2rem;
+}
+
+/* --- Responsive --- */
+@media (max-width: 992px) {
+  .about-grid {
+    flex-direction: column;
+  }
+
+  .about-col,
+  .about-img-box,
+  .about-text-box,
+  .timeline-wrapper {
+    width: 100%;
+    align-self: center;
+  }
+
+  .border-right {
+    border-right: none;
+    border-left: 3px solid #0f2038; /* Switch border side on mobile for consistency */
+    padding-right: 0;
+    padding-left: 20px;
+  }
+}
