@@ -1,144 +1,79 @@
-
-<div class="page-about-wrapper">
-    <?php
-    // Query the 'editable' CPT for the About page
-    $about_query = new WP_Query( array(
-        'post_type'      => 'editable',
-        'name'           => 'page-about', 
-        'posts_per_page' => 1,
-    ) );
-
-    // Default Fallbacks based on your provided text and wireframe
-    $title = 'ABOUT US';
+<div class="page-about-wrapper pt-large pb-large">
     
-    // Splitting your text to match the 5 staggered blocks in the design
-    $text_1 = "At FlowFix Plumbing, we believe every home and business deserves plumbing services they can rely on. Since our founding, we've built our reputation by delivering prompt, high-quality workmanship with honest communication and transparent pricing.";
-    $text_2 = "Whether it's a minor leak, a blocked drain, or a major plumbing emergency, our licensed team is committed to providing solutions that last. We combine years of industry experience with modern tools and proven techniques to handle projects of every size.";
-    $text_3 = "From emergency repairs and hot water system installations to gas fitting and complete plumbing upgrades, every job is completed with careful attention to safety, quality, and efficiency. Our goal is not just to fix today's problem, but to help prevent tomorrow's.";
-    $text_4 = "What truly sets FlowFix Plumbing apart is our customer-first approach. We arrive on time, explain every step of the process, and ensure you're confident in the work before we leave.";
-    $text_5 = "By focusing on reliability, professionalism, and long-term relationships, we've become a trusted plumbing partner for homeowners and businesses across Sydney.";
+    <div class="about-header-main">
+        <h1 class="about-main-title">ABOUT US</h1>
+    </div>
 
-    $img_1 = '';
-    $img_2 = '';
-    $img_3 = '';
+    <div class="about-content-area">
+        <?php
+      
+        $cta_title = 'Need Expert Plumbing Help?';
+        $cta_sub = 'Get in touch with our professionals today.';
+        $cta_btn_text = 'BOOK NOW';
+        $cta_btn_link = site_url('/contact');
+        // The About Us Data
+        $about_sections = array(
+            array(
+                'title' => 'Dedicated to Quality Plumbing Solutions',
+                'text'  => "At FlowFix Plumbing, we believe that exceptional plumbing is about more than fixing leaks or replacing pipes—it's about providing peace of mind. Every home and business relies on a safe, efficient plumbing system, and our mission is to keep those systems running flawlessly. From emergency repairs to large-scale plumbing installations, we approach every project with the same level of care, precision, and professionalism. Our licensed plumbers combine years of hands-on experience with modern tools and proven techniques to deliver solutions that are built to last.",
+                'img'   => 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=800&auto=format&fit=crop'
+            ),
+            array(
+                'title' => 'Experienced Professionals You Can Trust',
+                'text'  => "Behind every successful project is a team of skilled professionals who genuinely care about the quality of their work. At FlowFix Plumbing, our plumbers are fully licensed, insured, and continuously trained to stay up to date with the latest industry standards, technologies, and safety practices. Whether it's diagnosing hidden leaks, repairing burst pipes, installing hot water systems, or completing commercial plumbing projects, we bring expertise and attention to detail to every task.",
+                'img'   => 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?q=80&w=800&auto=format&fit=crop'
+            ),
+            array(
+                'title' => 'Customer Satisfaction Comes First',
+                'text'  => "Our customers are at the heart of everything we do. We understand that plumbing problems can be stressful, disruptive, and often unexpected, which is why we strive to make the entire experience as smooth and hassle-free as possible. From your initial enquiry to the final quality inspection, we prioritize clear communication, transparent pricing, and dependable service.",
+                'img'   => 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?q=80&w=800&auto=format&fit=crop'
+            ),
+            array(
+                'title' => 'Innovation, Reliability, and Lasting Results',
+                'text'  => "The plumbing industry continues to evolve, and so do we. FlowFix Plumbing invests in advanced equipment and modern diagnostic technology that allows us to identify problems quickly and complete repairs with greater accuracy and efficiency. By combining innovative tools with proven industry practices, we're able to reduce unnecessary disruption.",
+                'img'   => 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=800&auto=format&fit=crop'
+            ),
+            array(
+                'title' => 'Building Stronger Communities Through Honest Service',
+                'text'  => "As a locally owned and operated plumbing company, we're proud to serve the communities that have supported our growth over the years. Every service call is an opportunity to demonstrate our commitment to integrity, professionalism, and exceptional workmanship. Our vision is to become the first name people think of whenever they need a trusted plumbing professional.",
+                'img'   => 'https://images.unsplash.com/photo-1607472586893-edb57cb31414?q=80&w=800&auto=format&fit=crop'
+            )
+        );
 
-    // CTA Fallbacks
-    $cta_title = 'Book A Quotation';
-    $cta_sub = 'Lets Get your Started';
-    $cta_btn = 'BOOK NOW';
-    $cta_link = site_url('/contact');
+        // Loop to generate the full-width alternating bands
+        foreach ( $about_sections as $index => $section ) :
+            // Even indexes (0, 2, 4) get the dark blue background. Odd (1, 3) stay grey.
+            $is_even = ($index % 2 === 0);
+            $row_class = $is_even ? 'row-even' : 'row-odd';
+        ?>
+            <!-- Full Width Background Band -->
+            <section class="about-row-wrapper <?php echo esc_attr($row_class); ?> reveal-on-scroll">
+              <div class="about-container about-row">
+    
+    <div class="about-text-col">
+        <h2 class="about-section-title"><?php echo esc_html($section['title']); ?></h2>
+        <div class="title-underline-left"></div>
+        <p class="about-section-desc"><?php echo esc_html($section['text']); ?></p>
+    </div>
+    
+    <!-- DYNAMIC CLASS ADDED HERE -->
+    <div class="about-img-col about-img-col-<?php echo $index + 1; ?>">
+        <img src="<?php echo esc_url($section['img']); ?>" alt="<?php echo esc_attr($section['title']); ?>" class="about-border-img">
+    </div>
+    
+</div>
+            </section>
+        <?php endforeach; ?>
+    </div>
 
-    if ( $about_query->have_posts() ) {
-        $about_query->the_post();
-        
-        $dyn_title = get_post_meta( get_the_ID(), 'about_page_title', true );
-        if ( !empty($dyn_title) ) $title = $dyn_title;
-
-        // Dynamic Texts
-        for ($i = 1; $i <= 5; $i++) {
-            $dyn_text = get_post_meta( get_the_ID(), 'about_text_' . $i, true );
-            if ( !empty($dyn_text) ) ${"text_$i"} = $dyn_text;
-        }
-
-        // Dynamic Images
-        for ($i = 1; $i <= 3; $i++) {
-            $dyn_img = get_post_meta( get_the_ID(), 'about_image_' . $i, true );
-            if ( !empty($dyn_img) ) ${"img_$i"} = $dyn_img;
-        }
-
-        // Dynamic CTA
-        $dyn_cta_title = get_post_meta( get_the_ID(), 'about_cta_title', true );
-        if ( !empty($dyn_cta_title) ) $cta_title = $dyn_cta_title;
-
-        $dyn_cta_sub = get_post_meta( get_the_ID(), 'about_cta_sub', true );
-        if ( !empty($dyn_cta_sub) ) $cta_sub = $dyn_cta_sub;
-
-        $dyn_cta_btn = get_post_meta( get_the_ID(), 'about_cta_btn', true );
-        if ( !empty($dyn_cta_btn) ) $cta_btn = $dyn_cta_btn;
-
-        $dyn_cta_link = get_post_meta( get_the_ID(), 'about_cta_link', true );
-        if ( !empty($dyn_cta_link) ) $cta_link = $dyn_cta_link;
-
-        wp_reset_postdata();
-    }
-    ?>
-
-    <!-- Section 1: Light Base & Title -->
-    <section class="about-sec about-light pt-large pb-xlarge">
-        <div class="about-container">
-            <h1 class="about-main-title"><?php echo esc_html($title); ?></h1>
-            <div class="about-text-box w-50">
-                <p><?php echo esc_html($text_1); ?></p>
+    <!-- The CTA Box at the bottom of the wireframe -->
+   <div class="services-cta-box mt-xlarge">
+            <div class="cta-text">
+                <h3><?php echo esc_html($cta_title); ?></h3>
+                <p><?php echo esc_html($cta_sub); ?></p>
+            </div>
+            <div class="cta-action">
+                <a href="<?php echo esc_url($cta_btn_link); ?>" class="btn-cta"><?php echo esc_html($cta_btn_text); ?></a>
             </div>
         </div>
-    </section>
-
-    <!-- Section 2: Dark Band (Img Left, Text Right) -->
-    <section class="about-sec about-dark pb-xlarge">
-        <div class="about-container flex-row">
-            <div class="about-img-box pull-up">
-                <?php if($img_1) : ?>
-                    <img src="<?php echo esc_url($img_1); ?>" alt="About FlowFix">
-                <?php else : ?>
-                    <div class="placeholder-box"></div>
-                <?php endif; ?>
-            </div>
-            <div class="about-text-box w-50 text-white text-right-desktop">
-                <p><?php echo esc_html($text_2); ?></p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 3: Light Band (Text Left, Img Right) -->
-    <section class="about-sec about-light pb-xlarge">
-        <div class="about-container flex-row">
-            <div class="about-text-box w-50">
-                <p><?php echo esc_html($text_3); ?></p>
-            </div>
-            <div class="about-img-box pull-up">
-                <?php if($img_2) : ?>
-                    <img src="<?php echo esc_url($img_2); ?>" alt="Our Experience">
-                <?php else : ?>
-                    <div class="placeholder-box placeholder-dark"></div>
-                <?php endif; ?>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 4: Dark Band (Img Left, Text Right) -->
-    <section class="about-sec about-dark pb-medium">
-        <div class="about-container flex-row">
-            <div class="about-img-box pull-up">
-                <?php if($img_3) : ?>
-                    <img src="<?php echo esc_url($img_3); ?>" alt="Our Team">
-                <?php else : ?>
-                    <div class="placeholder-box"></div>
-                <?php endif; ?>
-            </div>
-            <div class="about-text-box w-50 text-white text-right-desktop">
-                <p><?php echo esc_html($text_4); ?></p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 5: Light Base, Final Text & CTA -->
-    <section class="about-sec about-light pt-medium pb-large">
-        <div class="about-container">
-            <div class="about-text-box w-50 align-right-box mb-xlarge">
-                <p><?php echo esc_html($text_5); ?></p>
-            </div>
-
-            <!-- CTA Block (Reused style from Testimonials) -->
-            <div class="about-cta-box">
-                <div class="cta-text">
-                    <h3><?php echo esc_html($cta_title); ?></h3>
-                    <p><?php echo esc_html($cta_sub); ?></p>
-                </div>
-                <div class="cta-action">
-                    <a href="<?php echo esc_url($cta_link); ?>" class="btn-gray"><?php echo esc_html($cta_btn); ?></a>
-                </div>
-            </div>
-        </div>
-    </section>
-
 </div>

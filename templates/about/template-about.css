@@ -1,26 +1,12 @@
 /* --- About Page Wrapper --- */
 .page-about-wrapper {
   font-family: sans-serif;
-  background-color: #e5e7eb; /* Matches the light gray in the mockup */
-}
-
-/* --- Global Section Styles --- */
-.about-sec {
-  width: 100%;
-}
-
-.about-light {
-  background-color: #e5e7eb; /* Light Gray */
-  color: #0b1a2f;
-}
-
-.about-dark {
-  background: linear-gradient(
-    135deg,
-    #061224 0%,
-    #0b1a2f 100%
-  ); /* FlowFix Dark Blue */
-  color: #ffffff;
+  background-color: #dce4eb; /* The light grey from the wireframe */
+  min-height: 100vh;
+  /* CRITICAL: Must be visible so the overlapping images don't get cut off */
+  overflow: visible;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
 }
 
 .about-container {
@@ -29,177 +15,300 @@
   padding: 0 2rem;
 }
 
-/* Spacing Helpers to create room for overlapping images */
-.pt-large {
-  padding-top: 5rem;
-}
-.pt-medium {
-  padding-top: 3rem;
-}
-.pb-xlarge {
-  padding-bottom: 8rem;
-} /* Extra room for image pull-up */
-.pb-medium {
-  padding-bottom: 3rem;
-}
-.pb-large {
-  padding-bottom: 5rem;
-}
-.mb-xlarge {
-  margin-bottom: 6rem;
+/* Header Styling */
+.about-header-main {
+  text-align: center;
+  /* Massive margin bottom so the first image has room to overlap UP into this area */
+  margin-bottom: 8rem;
 }
 
-/* --- Layout Grids --- */
-.flex-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 50px;
-}
-
-.w-50 {
-  width: 50%;
-}
-
-/* To push the 5th text block to the right side */
-.align-right-box {
-  margin-left: auto;
-}
-
-/* --- Typography --- */
 .about-main-title {
   font-size: 3.5rem;
   font-weight: 800;
-  text-align: center;
   color: #0b1a2f;
-  margin: 0 0 4rem 0;
-}
-
-.about-text-box p {
-  font-size: 1.1rem;
-  line-height: 1.8;
-  margin-bottom: 1.5rem;
-}
-
-.text-white p {
-  color: #ffffff;
-}
-
-.text-right-desktop {
-  text-align: left; /* Default left */
-}
-
-/* --- Overlapping Images --- */
-.about-img-box {
-  width: 45%;
-  height: 450px; /* Forces the tall rectangle shape */
-  position: relative;
-  z-index: 10;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-}
-
-.about-img-box img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* The Magic Class: Pulls the image up into the section above it */
-.pull-up {
-  margin-top: -150px;
-}
-
-/* Placeholders for before you upload images */
-.placeholder-box {
-  width: 100%;
-  height: 100%;
-  background-color: #d1d5db; /* Light placeholder */
-}
-.placeholder-dark {
-  background-color: #061224; /* Dark placeholder for light sections */
-}
-
-/* --- CTA Box (Mirrors Homepage Style) --- */
-.about-cta-box {
-  background-color: #0b1a2f;
-  border-radius: 25px;
-  padding: 3rem 4rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #ffffff;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-.cta-text h3 {
-  font-size: 2.2rem;
-  margin: 0 0 10px 0;
-  font-weight: 700;
-}
-
-.cta-text p {
-  font-size: 1.1rem;
   margin: 0;
-  font-weight: 300;
+  letter-spacing: 1px;
 }
 
-.btn-gray {
-  display: inline-block;
-  background-color: #d9d9d9;
-  color: #0b1a2f;
-  padding: 15px 40px;
-  border-radius: 30px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 1rem;
-  text-transform: uppercase;
-  transition: background-color 0.3s ease;
+/* --- The Full-Width Background Bands --- */
+.about-row-wrapper {
+  width: 100%;
+  padding: 120px 0; /* Heavy padding to keep text vertically centered */
+  position: relative;
 }
 
-.btn-gray:hover {
-  background-color: #ffffff;
+/* Dark Blue Bands */
+.row-even {
+  background: linear-gradient(135deg, #0b1a2f 0%, #061224 100%);
 }
 
-/* --- Responsive Adjustments --- */
-@media (min-width: 993px) {
-  .text-right-desktop {
-    text-align: right;
-  }
+/* Light Grey Bands (Matches page background) */
+.row-odd {
+  background: transparent;
 }
 
+/* --- Layout Logic --- */
+.about-row {
+  display: flex;
+  align-items: center;
+  gap: 80px;
+}
+
+/* Even Rows (Dark BG): Image Left, Text Right */
+/* (Since Text is first in our HTML, row-reverse flips them!) */
+.row-even .about-row {
+  flex-direction: row-reverse;
+}
+
+/* Odd Rows (Grey BG): Text Left, Image Right */
+.row-odd .about-row {
+  flex-direction: row;
+}
+
+/* --- Column Sizing & Overlaps --- */
+.about-text-col {
+  flex: 1;
+  z-index: 10; /* Keeps text above images if screens get small */
+}
+
+/* --- Base Image Column Styling --- */
+.about-img-col {
+  flex: 1;
+  position: relative;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  right: 5%;
+}
+
+/* --- INDIVIDUAL IMAGE OVERLAP CONTROLS --- */
+/* Adjust the negative margins to push each image up or down individually */
+
+/* Image 1: Pushed high up into the grey header area */
+.about-img-col-1 {
+  height: 10%;
+  margin-top: -250px;
+  margin-bottom: -80px;
+}
+
+/* Image 2: Pushed down deeper into the next grey band */
+.about-img-col-2 {
+  margin-top: -80px;
+  margin-bottom: -220px;
+  left: 5%;
+}
+
+/* Image 3: Shifted slightly upwards */
+.about-img-col-3 {
+  margin-top: -200px;
+  margin-bottom: -140px;
+}
+
+/* Image 4: Centered overlap */
+.about-img-col-4 {
+  margin-top: -160px;
+  margin-bottom: -160px;
+  left: 5%;
+}
+
+/* Image 5: Pushed down towards the CTA section */
+.about-img-col-5 {
+  margin-top: -120px;
+  margin-bottom: -200px;
+}
+
+/* --- Mobile Breakpoint Reset --- */
 @media (max-width: 992px) {
-  .flex-row {
+  .about-row,
+  .row-even .about-row,
+  .row-odd .about-row {
     flex-direction: column;
-    gap: 30px;
+    gap: 40px;
   }
 
-  .w-50,
-  .about-img-box {
+  /* Reset all custom overlaps on mobile so the layout doesn't break */
+  .about-img-col,
+  .about-img-col-1,
+  .about-img-col-2,
+  .about-img-col-3,
+  .about-img-col-4,
+  .about-img-col-5 {
+    margin-top: 0;
+    margin-bottom: 0;
     width: 100%;
   }
 
-  .about-img-box {
-    height: 350px;
+  .about-row-wrapper {
+    padding: 60px 0;
   }
 
-  /* Remove the negative margin pull-up on mobile so they stack normally */
-  .pull-up {
+  .about-header-main {
+    margin-bottom: 4rem;
+  }
+
+  .about-border-img {
+    max-width: 100%;
+  }
+}
+
+/* --- Image & Border Styling --- */
+.about-border-img {
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 3/4; /* Portrait rectangle */
+  object-fit: cover;
+  box-shadow: 0 25px 40px rgba(0, 0, 0, 0.2);
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+/* Dynamically color the borders based on the row to match the wireframe */
+.row-even .about-border-img {
+  border: 5px solid #0b1a2f; /* Dark border on left images */
+}
+
+.row-odd .about-border-img {
+  border: 5px solid #ffffff; /* White border on right images */
+}
+
+/* --- Text Styling & Dynamic Colors --- */
+.about-section-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.about-section-desc {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.title-underline-left {
+  width: 80px;
+  height: 4px;
+  margin: 15px 0 25px 0;
+  border-radius: 2px;
+}
+
+/* Colors for Dark Bands */
+.row-even .about-section-title {
+  color: #ffffff;
+}
+.row-even .about-section-desc {
+  color: #aebfd5;
+}
+.row-even .title-underline-left {
+  background-color: #00b4d8;
+}
+
+/* Colors for Light Grey Bands */
+.row-odd .about-section-title {
+  color: #0b1a2f;
+}
+.row-odd .about-section-desc {
+  color: #4a5568;
+}
+.row-odd .title-underline-left {
+  background-color: #0b1a2f;
+}
+
+/* --- Mobile Breakpoints --- */
+@media (max-width: 992px) {
+  /* Stack everything vertically on phones */
+  .about-row,
+  .row-even .about-row,
+  .row-odd .about-row {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  /* Remove extreme overlaps on mobile so things don't break */
+  .about-img-col {
     margin-top: 0;
+    margin-bottom: 0;
+    width: 100%;
   }
 
-  /* Reset padding for normal stacking */
-  .pb-xlarge {
-    padding-bottom: 4rem;
-  }
-  .pt-large {
-    padding-top: 3rem;
+  .about-row-wrapper {
+    padding: 60px 0;
   }
 
-  .about-cta-box {
+  .about-header-main {
+    margin-bottom: 4rem;
+  }
+
+  .about-border-img {
+    max-width: 100%;
+  }
+}
+
+/* --- About Page CTA Box --- */
+.services-cta-box {
+  background-color: #0b1a2f; /* Deep dark blue */
+  border-radius: 20px; /* Matches the rounded corners in the wireframe */
+  padding: 50px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 15px 30px rgba(11, 26, 47, 0.2);
+  margin-top: 6rem; /* Ensures a good gap from the last image */
+}
+
+/* CTA Typography */
+.services-cta-box .cta-text h3 {
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0 0 10px 0;
+  line-height: 1.2;
+}
+
+.services-cta-box .cta-text p {
+  color: #dce4eb; /* Soft grey matching the page background */
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* CTA Button */
+.services-cta-box .btn-cta {
+  background-color: #dce4eb; /* Light grey/white button */
+  color: #0b1a2f; /* Dark blue text */
+  padding: 15px 40px;
+  border-radius: 50px; /* Perfect pill shape */
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+/* Hover Effect for the Button */
+.services-cta-box .btn-cta:hover {
+  background-color: #ffffff;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(255, 255, 255, 0.2);
+}
+
+/* --- Mobile Responsiveness for CTA --- */
+@media (max-width: 768px) {
+  .services-cta-box {
     flex-direction: column;
     text-align: center;
+    padding: 40px 30px;
     gap: 30px;
-    padding: 2.5rem 2rem;
+  }
+
+  .services-cta-box .cta-text h3 {
+    font-size: 1.8rem;
+  }
+
+  .services-cta-box .btn-cta {
+    width: 100%; /* Makes button full width on small phones */
   }
 }

@@ -376,8 +376,7 @@
                 </div>
 
                 <!-- Bottom Image -->
-                <div class="about-img-box img-bot-right">
-                    <div class="img-shadow-bg"></div>
+                <div class="about-img-box img-bot-right">                   
                     <?php if($img_right) : ?>
                         <img src="<?php echo esc_url($img_right); ?>" alt="Our Team">
                     <?php else : ?>
@@ -441,6 +440,20 @@
     // Tell the observer to start watching every paragraph
     sections.forEach(section => observer.observe(section));
  });
+
+ document.addEventListener('DOMContentLoaded', function() {
+    const pills = document.querySelectorAll('.process-pill');
+    
+    pills.forEach(pill => {
+      pill.addEventListener('click', function() {
+        // 1. Remove active class from ALL pills
+        pills.forEach(p => p.classList.remove('active'));
+        
+        // 2. Add active class to the ONE you just clicked
+        this.classList.add('active');
+      });
+    });
+  });
 </script>
 
 
@@ -587,11 +600,29 @@
 
         $heading = 'OUR PROCESS';
         
-        // Fallback Data for 5 steps
-        $steps = array();
-        for ($i = 1; $i <= 5; $i++) {
-            $steps[$i] = 'Process Step ' . $i; // Default text
-        }
+        // Fallback Data for 5 steps (Title + Description)
+        $steps = array(
+            1 => array(
+                'title' => '1. Get in Touch',
+                'desc'  => "Contact our team by phone or through our online booking form. Tell us about your plumbing issue, and we'll schedule a convenient appointment or dispatch an emergency plumber immediately if urgent assistance is required."
+            ),
+            2 => array(
+                'title' => '2. On-Site Inspection',
+                'desc'  => "One of our licensed plumbers arrives on time to thoroughly inspect the problem. Using modern tools and years of expertise, we identify the root cause and recommend the most effective solution."
+            ),
+            3 => array(
+                'title' => '3. Transparent Quote',
+                'desc'  => "Before any work begins, we provide a clear, upfront quote with no hidden fees. We'll explain the scope of work, expected timeline, and answer any questions so you know exactly what to expect."
+            ),
+            4 => array(
+                'title' => '4. Professional Repair or Installation',
+                'desc'  => "Once approved, our experienced team completes the job using high-quality materials and industry-leading techniques. We work efficiently while maintaining a clean and safe workspace, ensuring minimal disruption to your home or business."
+            ),
+            5 => array(
+                'title' => '5. Final Quality Check',
+                'desc'  => "After the work is completed, we thoroughly test every repair or installation to ensure everything is functioning perfectly. We clean up the work area, walk you through the completed job, and provide maintenance advice so your plumbing continues to perform reliably for years to come."
+            )
+        );
 
         if ( $process_query->have_posts() ) {
             $process_query->the_post();
@@ -600,8 +631,11 @@
             if ( !empty($dyn_heading) ) $heading = $dyn_heading;
 
             for ($i = 1; $i <= 5; $i++) {
-                $dyn_step = get_post_meta( get_the_ID(), 'process_step_' . $i, true );
-                if ( !empty($dyn_step) ) $steps[$i] = $dyn_step;
+                $dyn_title = get_post_meta( get_the_ID(), 'process_step_' . $i . '_title', true );
+                $dyn_desc  = get_post_meta( get_the_ID(), 'process_step_' . $i . '_desc', true );
+                
+                if ( !empty($dyn_title) ) $steps[$i]['title'] = $dyn_title;
+                if ( !empty($dyn_desc) ) $steps[$i]['desc'] = $dyn_desc;
             }
             
             wp_reset_postdata();
@@ -631,29 +665,39 @@
 
             <div class="process-steps-wrapper">
                 
+                <!-- STEP 1 (Left Pill, Text on Right) -->
                 <div class="process-pill pill-right step-1 active" data-svg-y="80">
-                    <span class="pill-text"><?php echo esc_html($steps[1]); ?></span>
+                    <span class="pill-text"><?php echo esc_html($steps[1]['title']); ?></span>
                     <div class="pill-circle"></div>
+                    <p class="process-desc desc-right"><?php echo esc_html($steps[1]['desc']); ?></p>
                 </div>
 
+                <!-- STEP 2 (Right Pill, Text on Left) -->
                 <div class="process-pill pill-left step-2" data-svg-y="240">
+                    <p class="process-desc desc-left"><?php echo esc_html($steps[2]['desc']); ?></p>
                     <div class="pill-circle"></div>
-                    <span class="pill-text"><?php echo esc_html($steps[2]); ?></span>
+                    <span class="pill-text"><?php echo esc_html($steps[2]['title']); ?></span>
                 </div>
 
+                <!-- STEP 3 (Left Pill, Text on Right) -->
                 <div class="process-pill pill-right step-3" data-svg-y="400">
-                    <span class="pill-text"><?php echo esc_html($steps[3]); ?></span>
+                    <span class="pill-text"><?php echo esc_html($steps[3]['title']); ?></span>
                     <div class="pill-circle"></div>
+                    <p class="process-desc desc-right"><?php echo esc_html($steps[3]['desc']); ?></p>
                 </div>
 
+                <!-- STEP 4 (Right Pill, Text on Left) -->
                 <div class="process-pill pill-left step-4" data-svg-y="560">
+                    <p class="process-desc desc-left"><?php echo esc_html($steps[4]['desc']); ?></p>
                     <div class="pill-circle"></div>
-                    <span class="pill-text"><?php echo esc_html($steps[4]); ?></span>
+                    <span class="pill-text"><?php echo esc_html($steps[4]['title']); ?></span>
                 </div>
 
+                <!-- STEP 5 (Left Pill, Text on Right) -->
                 <div class="process-pill pill-right step-5" data-svg-y="720">
-                    <span class="pill-text"><?php echo esc_html($steps[5]); ?></span>
+                    <span class="pill-text"><?php echo esc_html($steps[5]['title']); ?></span>
                     <div class="pill-circle"></div>
+                    <p class="process-desc desc-right"><?php echo esc_html($steps[5]['desc']); ?></p>
                 </div>
 
             </div>
@@ -838,15 +882,39 @@
         $cta_btn_text = 'BOOK NOW';
         $cta_btn_link = site_url('/contact');
 
-        // 6 Testimonial Fallbacks
-        $testimonials = array();
-        for ($i = 1; $i <= 6; $i++) {
-            $testimonials[$i] = array(
-                'text' => 'This is a placeholder for a great review from a satisfied customer. They were very happy with the quick and reliable service.',
-                'name' => 'Client Name',
+        // 6 Real Testimonial Fallbacks
+        $testimonials = array(
+            1 => array(
+                'text' => '"FlowFix Plumbing responded within an hour when our kitchen pipe burst. The plumber explained everything clearly, completed the repair quickly, and left the area spotless. The entire experience was professional from start to finish. I wouldn\'t hesitate to recommend them to anyone in Sydney."',
+                'name' => 'Sarah Mitchell',
                 'img'  => '' // Will fallback to dark circle
-            );
-        }
+            ),
+            2 => array(
+                'text' => '"We\'ve used FlowFix Plumbing several times for both emergency repairs and routine maintenance. Their team is always punctual, friendly, and transparent with pricing. It\'s refreshing to work with a company that genuinely cares about customer satisfaction."',
+                'name' => 'James Robertson',
+                'img'  => ''
+            ),
+            3 => array(
+                'text' => '"Our hot water system failed unexpectedly, and FlowFix had a technician at our home the very same day. They replaced the system efficiently and even took the time to explain how to maintain it properly. Outstanding service and excellent workmanship."',
+                'name' => 'Emily Carter',
+                'img'  => ''
+            ),
+            4 => array(
+                'text' => '"I contacted FlowFix Plumbing after struggling with recurring blocked drains. They quickly identified the underlying issue using modern equipment and permanently solved the problem. The quality of their work exceeded my expectations, and their pricing was fair and honest."',
+                'name' => 'Michael Thompson',
+                'img'  => ''
+            ),
+            5 => array(
+                'text' => '"From the first phone call to the final inspection, the entire process was seamless. The team arrived exactly when they said they would, completed our bathroom plumbing installation flawlessly, and made sure everything was working perfectly before leaving. Highly professional and incredibly reliable."',
+                'name' => 'Olivia Harris',
+                'img'  => ''
+            ),
+            6 => array(
+                'text' => '"FlowFix Plumbing handled the plumbing for our office renovation, and the experience was exceptional. Their communication was excellent throughout the project, deadlines were met without delays, and the workmanship was first-class. We\'ll definitely continue using them for all our commercial plumbing needs."',
+                'name' => 'Daniel Walker',
+                'img'  => ''
+            )
+        );
 
         if ( $testi_query->have_posts() ) {
             $testi_query->the_post();
@@ -895,6 +963,8 @@
             <?php foreach ($testimonials as $testi) : ?>
                 <div class="testi-card">
                     <div class="testi-content">
+                        <!-- Added the 5 stars here so they appear consistently -->
+                        <div class="testi-stars" style="color: #ffc107; font-size: 1.2rem; margin-bottom: 10px;">⭐⭐⭐⭐⭐</div>
                         <p><?php echo esc_html($testi['text']); ?></p>
                     </div>
                     <div class="testi-profile">
@@ -921,7 +991,6 @@
 
     </div>
 </section>
-
 
 <style>
 /* --- HERO Section General --- */
@@ -1010,6 +1079,7 @@
 
 /* --- Right Side Cards --- */
 .hero-trust-cards {
+  
   display: flex;
   gap: 30px; /* Increased gap */
   position: relative;
@@ -1019,6 +1089,7 @@
 
 .trust-card {
   background: #e1e1e1; 
+ 
   width: 220px; /* Massively increased width */
   height: 380px; /* Massively increased height */
   border-radius: 20px;
@@ -1058,6 +1129,11 @@
   height: 2px;
   background-color: #333; /* Darkened for visibility */
   margin-bottom: 20px;
+}
+
+.card-text {
+  font-weight: 700;
+  color: #333;
 }
 
 /* Responsive Cleanup */
@@ -1405,48 +1481,52 @@
   }
 }
 
-
 /* --- About Us Section --- */
 .home-about {
   background-color: #f4f5f7; /* Off-white background */
-  padding: 6rem 0; /* Increased for a premium feel */
+  padding: 8rem 0; /* Increased slightly for a high-end, breathable feel */
   color: #0b1a2f; /* FlowFix dark blue */
   font-family: sans-serif;
+  overflow: hidden; /* Prevents horizontal scrolling from offset elements */
 }
 
 .about-container {
-  max-width: 1000px;
-  /* Remove 'margin: 0 auto;' and use this instead: */
-  margin-left: 8%; /* Pushes it off the left wall just a bit */
-  margin-right: auto; /* Forces all the leftover empty space to the right side */
-  padding: 0 10rem;
+  /* Safe Positions Kept */
+  margin-left: 8%; 
+  margin-right: auto; 
+  /* Swapped hard '10rem' for percentage so it scales beautifully on laptops */
+  padding: 0 8%; 
+  max-width: 1600px;
 }
 
 .about-header {
-  margin-bottom: 4rem 6rem;
-  padding: 0 5rem;
+  /* Fixed invalid CSS syntax (was 4rem 6rem) */
+  margin-bottom: 5rem; 
+  padding: 0;
 }
 
 .about-header h2 {
-  font-size: 3.8rem;
+  font-size: 3.5rem;
   font-weight: 800;
   margin: 0;
   text-transform: uppercase;
   color: #0b1a2f;
+  letter-spacing: -1px; /* Tighter letter spacing for modern typography */
+  line-height: 1.1;
 }
 
 .title-underline {
-  width: 150px;
+  width: 120px;
   height: 5px;
   background-color: #00b4d8; /* Cyan active color */
-  margin-top: 15px;
+  margin-top: 20px;
   border-radius: 5px;
 }
 
 /* --- Layout Grid --- */
 .about-grid {
   display: flex;
-  gap: 60px; /* Widened gap for a cleaner, editorial look */
+  gap: 80px; /* Widened gap for a cleaner, editorial look */
   align-items: stretch; /* Ensures both columns are the exact same height */
 }
 
@@ -1454,60 +1534,51 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  /* This is the magic that pushes top items up and bottom items down */
+  /* Magic property that aligns top/bottom items perfectly */
   justify-content: space-between; 
 }
 
 /* --- Image Boxes --- */
 .about-img-box {
   position: relative;
-  border-radius: 12px;
-  width: 100%; /* Spans full column width */
+  border-radius: 16px; /* Slightly softer corners */
+  width: 100%; 
   overflow: hidden;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  /* Premium, softer shadow */
+  box-shadow: 0 20px 40px rgba(11, 26, 47, 0.08);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  
 }
+
 
 /* ⬇️ MANUAL CONTROL: Set top image height here ⬇️ */
 .img-top-left {
-  height: 400px; 
+  height: 440px; 
 }
 
 /* ⬇️ MANUAL CONTROL: Set bottom image height to match your text here ⬇️ */
 .img-bot-right {
-  height: 550px; /* Adjust this number up or down to align exactly with the left paragraph */
+  height: 700px; 
   overflow: visible; /* Allows the shadow to show */
+  width: 82%;
+  right: 18%;
+ 
 }
 
 .placeholder-blue {
   background-color: #0b1a2f;
   width: 100%;
   height: 100%;
-  border-radius: 12px;
+  border-radius: 16px;
 }
 
-.about-img-box img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-/* Shadow effect for bottom right image */
-.img-shadow-bg {
-  position: absolute;
-  top: 15px;
-  right: -15px;
-  width: 100%;
-  height: 100%;
-  background-color: #d9d9d9;
-  border-radius: 12px;
-  z-index: 1;
-}
 
 .img-bot-right img,
 .img-bot-right .placeholder-blue {
+  width: 105%;
   position: relative;
   z-index: 2;
+ 
 }
 
 /* --- Text Boxes --- */
@@ -1515,35 +1586,36 @@
   position: relative;
   padding: 1rem 0;
   width: 100%;
+
 }
 
 .about-text-box h3 {
-  font-size: 1.8rem;
+  font-size: 2.5rem;
   margin-top: 0;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
   color: #0b1a2f;
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
 .about-text-box p {
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   line-height: 1.8;
-  color: #333;
+  color: #4a5568; /* Slate gray for better readability than pure #333 */
 }
 
 /* Vertical Borders (Matching the Reference Image) */
 .border-left {
-  border-left: 4px solid #0b1a2f; /* Thick, bold line on the left */
-  padding-left: 30px; 
-  margin-top: 40px; /* Adds breathing room between the top image and this text */
+  border-left: 4px solid #0b1a2f; 
+  padding-left: 40px; 
+  margin-top: 50px; 
 }
 
-/* Right Column Border & Text Alignment */
 .border-right {
   border-right: none; 
-  padding-right: 30px;
-  text-align: left; /* Changes the text to read standard left-to-right */
-  margin-bottom: 40px; 
+  padding-right: 40px;
+  text-align: left; 
+  margin-bottom: 50px; 
 }
 
 /* --- Timeline & Scrollable Area --- */
@@ -1553,11 +1625,11 @@
 
 .timeline-nav {
   position: relative;
-  margin-bottom: 30px;
-  padding: 10px 0;
-  width: 85%; /* Shortens the timeline to match the reference */
-  margin-left: 0; /* Pushes timeline to the right side */
-  margin-right: auto; /* Forces the timeline to the left */
+  margin-bottom: 40px;
+  padding: 15px 0;
+  width: 85%; 
+  margin-left: 0; 
+  margin-right: auto; 
 }
 
 .timeline-line {
@@ -1566,8 +1638,8 @@
   left: 0;
   transform: translateY(-50%);
   width: 100%;
-  height: 2px;
-  background-color: #0b1a2f;
+  height: 3px; /* Slightly thicker for better visibility */
+  background-color: #cbd5e1; /* Softer base line */
   z-index: 1;
 }
 
@@ -1579,32 +1651,39 @@
 }
 
 .timeline-dots .dot {
-  width: 14px;
-  height: 14px;
+  width: 18px; /* Slightly larger targets for better UX */
+  height: 18px;
   border-radius: 50%;
   background-color: #0b1a2f;
-  border: 2px solid #f4f5f7; /* Creates a clean cut-out effect over the line */
+  border: 4px solid #f4f5f7; 
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Premium snap transition */
   padding: 0;
+}
+
+.timeline-dots .dot:hover {
+  background-color: #00b4d8;
+  transform: scale(1.2);
 }
 
 .timeline-dots .dot.active {
   background-color: #00b4d8; 
   border-color: #00b4d8;
-  transform: scale(1.3);
+  transform: scale(1.4);
+  box-shadow: 0 0 15px rgba(0, 180, 216, 0.4); /* Glow effect on active */
 }
 
 /* Scrollable Container */
 .scrollable-area {
-  height: 320px; 
+  height: 350px; 
   width: 85%; 
-  margin-right: auto; /* Forces the text box to the left */
-  margin-left: 0;     /* Removes the right-push */
+  margin-right: auto; 
+  margin-left: 0;   
   overflow-y: auto;
   position: relative;
+  padding-right: 20px; /* Keeps text away from scrollbar */
   scrollbar-width: thin;
-  scrollbar-color: #00b4d8 #f4f5f7;
+  scrollbar-color: #00b4d8 #e2e8f0;
 }
 
 /* Custom Scrollbar for Chrome/Safari */
@@ -1612,46 +1691,100 @@
   width: 6px;
 }
 .scrollable-area::-webkit-scrollbar-track {
-  background: transparent;
-}
-.scrollable-area::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 180, 216, 0.5);
+  background: #e2e8f0;
   border-radius: 10px;
 }
+.scrollable-area::-webkit-scrollbar-thumb {
+  background-color: #00b4d8;
+  border-radius: 10px;
+}
+
 .scroll-section {
-  margin-bottom: 2rem;
+  /* Fixed massive bug: 10% makes text invisible. Set to standard size */
+  font-size: 1rem; 
+  margin-bottom: 2.5rem;
 }
 
 /* --- Responsive Layout Stack --- */
+
+/* Tablet Optimization (Prevents squishing before mobile snap) */
+@media (max-width: 1200px) {
+  .about-container {
+    padding: 0 5%;
+    margin-left: 5%;
+  }
+  .about-grid {
+    gap: 40px;
+  }
+}
+
+/* Mobile & Small Tablet Snap */
 @media (max-width: 992px) {
+  .home-about {
+    padding: 5rem 0;
+  }
+  
+  .about-container {
+    margin-left: auto; /* Centers container on mobile */
+    margin-right: auto;
+    padding: 0 2rem;
+  }
+
+  .about-header {
+    text-align: center;
+  }
+
+  .title-underline {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .about-grid {
     flex-direction: column;
-    gap: 40px;
+    gap: 60px;
   }
 
   /* Reset manual heights for mobile so they look natural */
   .img-top-left,
   .img-bot-right {
-    height: 300px;
+    height: 400px;
+    width: 100%; /* Reset offset widths */
+    right: 0;
   }
 
   .border-right {
     border-right: none;
-    border-left: 4px solid #0b1a2f; /* Swap border to the left for mobile readability */
+    border-left: 4px solid #00b4d8; /* Distinct color for mobile borders */
     padding-right: 0;
     padding-left: 30px;
-    text-align: left; /* Reset text alignment */
+    text-align: left; 
   }
 
-  .timeline-nav {
-    width: 100%;
+  .border-left {
+    border-left-color: #00b4d8;
+    padding-left: 30px;
   }
 
-  .about-container {
-    margin-left: auto;
-    margin-right: auto;
+  .timeline-nav,
+  .scrollable-area {
+    width: 100%; /* Full width on mobile */
   }
 }
+
+/* Small Phones */
+@media (max-width: 576px) {
+  .about-header h2 {
+    font-size: 2.8rem;
+  }
+  .about-text-box h3 {
+    font-size: 2rem;
+  }
+  .img-top-left,
+  .img-bot-right {
+    height: 300px; /* Even smaller for tiny screens */
+  }
+}
+
 
 /* --- Why Choose Us Section --- */
 .home-why-choose {
@@ -1908,8 +2041,9 @@
   padding: 5rem 0 6rem 0;
   font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: #ffffff;
-  min-height: 170vh;
+  min-height: 195vh;
   box-sizing: border-box;
+  overflow:visible;
 }
 
 .process-container {
@@ -1920,12 +2054,13 @@
 
 /* --- Section Header --- */
 .process-header {
-  margin-bottom: 3.5rem;
+  margin-bottom: 8rem;
+  left: 100%;
 }
 
 .process-header .section-title {
   color: #0b213a;
-  font-size: 2.8rem;
+  font-size: 4rem;
   font-weight: 800;
   margin: 0;
   letter-spacing: 1.5px;
@@ -1933,8 +2068,8 @@
 }
 
 .process-header .title-underline {
-  width: 140px;
-  height: 4px;
+  width: 180px;
+  height: 6px;
   background-color: #00bcd4; 
   margin-top: 12px;
   border-radius: 2px;
@@ -1943,10 +2078,11 @@
 /* --- Interactive Timeline Area --- */
 .process-interactive-area {
   position: relative;
-  max-width: 650px; /* INCREASED: Gives staggered pills more room to go left and right */
+  max-width: 700px; /* INCREASED: Gives staggered pills more room to go left and right */
   margin: 0 auto;
   aspect-ratio: 450 / 650;
   width: 100%;
+  right: 1%;
 }
 
 .process-path {
@@ -2010,7 +2146,7 @@
 
 /* Step 2, 4: Anchored fully to the RIGHT edge */
 .step-2, .step-4 {
-  left: 60%; 
+  left: 40%; 
   justify-content: flex-start; /* Pulls circle to the center line */
   padding-left: 15px; /* Spacing for the larger circle */
   padding-right: 25px;
@@ -2043,8 +2179,8 @@
 .pill-text {
   flex: 1;
   text-align: center;
-  font-weight: 600;
-  font-size: 1.2rem; /* Slightly larger text */
+  font-weight: 700;
+  font-size: 1.6rem; /* Slightly larger text */
   color: #ffffff;
   padding: 0 10px;
   pointer-events: none; 
@@ -2061,6 +2197,58 @@
   pointer-events: none;
   flex-shrink: 0; 
   box-shadow: inset -2px -2px 5px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0,0,0,0.4); 
+}
+
+
+/* --- Process Descriptions --- */
+.process-desc {
+  position: absolute;
+  width: 320px; /* Width of the text box */
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.6;
+  color: #e4e9f0; /* Soft off-white to match the theme */
+  pointer-events: auto; /* Allows users to select text if they want */
+  margin: 0;
+transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important; 
+  z-index: 10;  
+}
+
+/* Position for pills on the left (Text goes to the right) */
+.desc-right {
+  left: 130%; /* Pushes text outside the pill to the right */
+  text-align: left;
+  transform-origin: left center !important;
+}
+
+/* Position for pills on the right (Text goes to the left) */
+.desc-left {
+  right: 140%; /* Pushes text outside the pill to the left */
+  text-align: right;
+  transform-origin: right center !important;
+}
+
+/* --- The Selection Effect (Hover and Active states) --- */
+.process-pill:hover .process-desc,
+.process-pill.active .process-desc {
+  color: #0075ff; /* Bright cyan/blue */
+  text-shadow: 0 0 15px #0075ff(248, 248, 248, 0.5); /* Creates the "bright" glowing effect */
+  transform: scale(1.2); /* Scales the text up */
+}
+
+/* Make sure the active pill comes to the very front so the big text doesn't hide behind other pills */
+.process-pill:hover,
+.process-pill.active {
+  z-index: 20 !important; 
+}
+
+/* Hide descriptions on mobile screens so it doesn't break off-screen */
+@media (max-width: 1024px) {
+  .process-desc {
+    display: none; 
+    /* Alternatively, you can stack the text under the pills for mobile, 
+       but hiding them keeps the timeline looking clean on small screens */
+  }
 }
 
 /* --- Responsive Adjustments --- */
@@ -2091,7 +2279,7 @@
 
 /* --- Featured Projects Section --- */
 .home-projects {
-  background-color: #0b1a2f; /* Deep blue background to match reference */
+  background-color: #030a13; /* Deep blue background to match reference */
   padding: 6rem 0 0 0; /* Padding top, 0 on bottom so the last image touches the edge if desired */
   font-family: sans-serif;
 }

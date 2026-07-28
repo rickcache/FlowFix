@@ -1,7 +1,7 @@
 /* --- Projects Page Wrapper --- */
 .page-projects-wrapper {
   font-family: sans-serif;
-  background-color: #dfdfdf; /* Light gray from wireframe */
+  background-color: #dce4eb; /* Premium light gray matching the About page */
   min-height: 100vh;
 }
 
@@ -41,61 +41,69 @@
   text-align: center;
   color: #0b1a2f;
   margin: 0;
+  letter-spacing: 2px;
+}
+
+.title-underline-left {
+  width: 80px;
+  height: 4px;
+  background-color: #00b4d8;
+  margin-top: 25px;
+  border-radius: 2px;
 }
 
 /* --- Top Section --- */
 .flex-row {
   display: flex;
   align-items: center;
-  gap: 60px;
+  gap: 80px;
 }
 
 .w-50 {
   width: 50%;
 }
 
-.projects-top-image-placeholder {
+/* Upgraded Top Image */
+.projects-top-image {
   width: 100%;
   height: 600px;
-  background-color: #000000;
+  background-color: #0b1a2f;
+  background-size: cover;
+  background-position: center;
   border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.projects-top-image-placeholder span {
-  color: #ffffff;
-  font-size: 1.5rem;
-  font-weight: bold;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
 .projects-top-text h2 {
   font-size: 4rem;
   color: #0b1a2f;
-  line-height: 1.2;
+  line-height: 1.1;
   margin-top: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   font-weight: 800;
+  letter-spacing: -1px;
 }
 
 .projects-top-text p {
-  font-size: 1.2rem;
-  color: #0088ff; /* Bright blue text from wireframe */
+  font-size: 1.25rem;
+  color: #00b4d8; /* Bright cyan text for contrast */
   font-weight: 600;
   margin: 0;
+  line-height: 1.6;
+  max-width: 85%;
 }
 
 /* --- Grid Header --- */
 .projects-grid-header h2 {
   font-size: 3.5rem;
   color: #0b1a2f;
-  line-height: 1.3;
+  line-height: 1.2;
   margin: 0;
   font-weight: 800;
+  letter-spacing: -1px;
 }
 
-/* --- The Grid --- */
+/* --- The Interactive Grid --- */
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -103,21 +111,85 @@
 }
 
 .project-card {
-  background-color: #0b1a2f;
-  aspect-ratio: 3 / 4; /* Keeps the cards tall and rectangular */
-  border-radius: 20px;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.3s ease;
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 16px;
+  overflow: hidden; /* Keeps the zooming image contained inside the rounded corners */
+  display: block;
+  text-decoration: none;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
 }
 
-.project-card .placeholder-text {
+/* The Background Image Layer */
+.project-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* The Dark Gradient Overlay */
+.project-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(11, 26, 47, 0.95) 0%,
+    rgba(11, 26, 47, 0.2) 50%,
+    transparent 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 30px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+/* The Text inside the Overlay */
+.project-title {
   color: #ffffff;
   font-size: 1.5rem;
-  font-weight: bold;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  transform: translateY(20px);
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.project-view-text {
+  color: #00b4d8;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transform: translateY(20px);
+  transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* --- Hover Effects --- */
+.project-card:hover {
+  transform: translateY(-10px); /* Lifts the whole card up */
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+}
+
+.project-card:hover .project-bg {
+  transform: scale(1.08); /* Slow, premium zoom effect */
+}
+
+.project-card:hover .project-overlay {
+  opacity: 1; /* Reveals the dark gradient */
+}
+
+.project-card:hover .project-title,
+.project-card:hover .project-view-text {
+  transform: translateY(0); /* Slides text up into place */
 }
 
 /* Hidden class for JS toggle */
@@ -130,29 +202,40 @@
   background-color: #0b1a2f;
   color: #ffffff;
   border: none;
-  padding: 15px 60px;
+  padding: 16px 50px;
   border-radius: 50px;
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 20px rgba(11, 26, 47, 0.2);
 }
 
 .btn-dark-blue:hover {
-  background-color: #1a365d;
+  background-color: #00b4d8; /* Swaps to cyan on hover */
+  transform: translateY(-3px);
+  box-shadow: 0 15px 25px rgba(0, 180, 216, 0.4);
 }
 
 /* --- Responsive --- */
 @media (max-width: 992px) {
   .flex-row {
     flex-direction: column;
+    gap: 40px;
   }
   .w-50 {
     width: 100%;
   }
-  .projects-top-text h2,
-  .projects-grid-header h2 {
+  .projects-top-image {
+    height: 400px;
+  }
+  .projects-top-text h2 {
     font-size: 3rem;
+  }
+  .projects-grid-header h2 {
+    font-size: 2.8rem;
   }
   .projects-grid-header {
     text-align: center;
@@ -165,5 +248,19 @@
 @media (max-width: 768px) {
   .projects-grid {
     grid-template-columns: 1fr;
+  }
+
+  /* On mobile, make the title always visible since there is no hover */
+  .project-overlay {
+    opacity: 1;
+    background: linear-gradient(
+      to top,
+      rgba(11, 26, 47, 0.9) 0%,
+      transparent 60%
+    );
+  }
+  .project-title,
+  .project-view-text {
+    transform: translateY(0);
   }
 }
