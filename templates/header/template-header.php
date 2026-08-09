@@ -1,29 +1,49 @@
+<!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+<head>
+    <meta charset="<?php bloginfo( 'charset' ); ?>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php wp_head(); ?>
+</head>
+<body <?php body_class(); ?>>
+<?php wp_body_open(); ?>
+
+<?php
+// Fetch Header Variables from Native Theme Options
+$header_logo     = get_option('ff_header_logo');
+$header_btn_txt  = get_option('ff_header_btn_text', 'Contact Now');
+$header_btn_link = get_option('ff_header_btn_link', site_url('/contact'));
+?>
+
 <header class="site-header">
     <div class="header-container flex-row align-center space-between">
         
-        <!-- 1. Logo (Light Gray Circle from wireframe) -->
+        <!-- 1. Logo -->
         <div class="header-logo">
             <a href="<?php echo home_url(); ?>" aria-label="Home">
-                <div class="logo-circle"></div>
+                <?php if($header_logo) : ?>
+                    <img src="<?php echo esc_url($header_logo); ?>" alt="<?php bloginfo('name'); ?>" style="max-height: 50px; width: auto;">
+                <?php else : ?>
+                    <div class="logo-circle" style="width:50px; height:50px; background:#ccc; border-radius:50%;"></div>
+                <?php endif; ?>
             </a>
         </div>
 
-        <!-- 2. Desktop Navigation -->
+        <!-- 2. Desktop Navigation (Editable via WP Menus) -->
         <nav class="desktop-nav">
-            <ul>
-                <!-- Added active-link class to "home" to make it blue -->
-                <li><a href="<?php echo site_url('/home'); ?>">home</a></li>
-                <li><a href="<?php echo site_url('/about'); ?>">about</a></li>
-                <li><a href="<?php echo site_url('/services'); ?>">services</a></li>
-                <li><a href="<?php echo site_url('/projects'); ?>">Projects</a></li>
-                <li><a href="<?php echo site_url('/contact'); ?>">contact</a></li>
-            </ul>
+            <?php
+            wp_nav_menu(array(
+                'theme_location' => 'primary',
+                'container'      => false,
+                'menu_class'     => 'desktop-menu-list flex-row',
+                'fallback_cb'    => false,
+            ));
+            ?>
         </nav>
 
-        <!-- 3. Right Action Area (Button & Hamburger) -->
+        <!-- 3. Right Action Area -->
         <div class="header-actions flex-row align-center">
-            <!-- New Contact Now Button -->
-            <a href="<?php echo site_url('/contact'); ?>" class="header-contact-btn">Contact Now</a>
+            <a href="<?php echo esc_url($header_btn_link); ?>" class="header-contact-btn btn-primary"><?php echo esc_html($header_btn_txt); ?></a>
             
             <!-- Hamburger Button (Mobile Only) -->
             <button class="hamburger-btn" id="hamburger-btn" aria-label="Open Menu">
@@ -36,25 +56,27 @@
     </div>
 </header>
 
-<!-- 4. Mobile Sidebar & Overlay (Unchanged) -->
+<!-- 4. Mobile Sidebar & Overlay -->
 <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
 <div class="mobile-sidebar" id="mobile-sidebar">
-    <div class="sidebar-header">
+    <div class="sidebar-header flex-row align-center space-between">
         <h2>Menu</h2>
         <button class="close-sidebar-btn" id="close-sidebar-btn" aria-label="Close Menu">&times;</button>
     </div>
     
+    <!-- Mobile Navigation (Editable via WP Menus) -->
     <nav class="mobile-nav">
-        <ul>
-            <li><a href="<?php echo site_url(); ?>">Home</a></li>
-            <li><a href="<?php echo site_url('/about'); ?>">About</a></li>
-            <li><a href="<?php echo site_url('/services'); ?>">Services</a></li>
-            <li><a href="<?php echo site_url('/projects'); ?>">Projects</a></li>
-            <li><a href="<?php echo site_url('/contact'); ?>">Contact</a></li>
-        </ul>
+        <?php
+        wp_nav_menu(array(
+            'theme_location' => 'primary',
+            'container'      => false,
+            'menu_class'     => 'mobile-menu-list',
+            'fallback_cb'    => false,
+        ));
+        ?>
     </nav>
 </div>
 
-<!-- Header Spacer -->
+<!-- Header Spacer (Pushes content down if header is fixed) -->
 <div class="header-spacer"></div>

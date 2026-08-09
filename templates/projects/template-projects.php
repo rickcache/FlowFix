@@ -1,29 +1,41 @@
 <div class="page-projects-wrapper pt-large pb-large">
     <div class="projects-container">
         
-        <h1 class="projects-main-title">PROJECTS</h1>
+        <?php
+        // Fetch static variables directly from Native Theme Options!
+        $main_title   = get_option('ff_pp_main_title', 'PROJECTS');
+        
+        // Top Section Data
+        $top_img      = get_option('ff_pp_top_image', 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1000&auto=format&fit=crop');
+        $top_heading  = get_option('ff_pp_top_heading', 'More than<br>1000+ projects<br>completed');
+        $top_desc     = get_option('ff_pp_top_desc', 'We at Flowfix have experienced teams for each individual requirement.');
+        
+        // Grid Section Data
+        $grid_heading = get_option('ff_pp_grid_heading', 'Here are some of<br>our Projects');
+        $fallback_img = get_option('ff_pp_fallback_img', 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600&auto=format&fit=crop');
+        ?>
+
+        <h1 class="projects-main-title"><?php echo esc_html($main_title); ?></h1>
 
         <!-- Top Section: Image Left, Text Right -->
         <div class="projects-top-section flex-row mt-large">
             <div class="w-50">
-                <!-- Swapped the black box for a premium placeholder image and removed the text -->
-                <div class="projects-top-image" style="background-image: url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1000&auto=format&fit=crop');">
+                <div class="projects-top-image" style="background-image: url('<?php echo esc_url($top_img); ?>');">
                 </div>
             </div>
             <div class="w-50 projects-top-text">
-                <h2>More than<br>1000+ projects<br>completed</h2>
-                <p>We at Flowfix have experienced teams for each individual requirement.</p>
-                <!-- Added a subtle underline accent for a premium touch -->
+                <h2><?php echo wp_kses_post($top_heading); ?></h2>
+                <p><?php echo esc_html($top_desc); ?></p>
                 <div class="title-underline-left"></div>
             </div>
         </div>
 
         <!-- Middle Section: Grid Header -->
         <div class="projects-grid-header mt-xlarge text-right">
-            <h2>Here are some of<br>our Projects</h2>
+            <h2><?php echo wp_kses_post($grid_heading); ?></h2>
         </div>
 
-        <!-- Grid Section -->
+        <!-- Grid Section (Keeps WP_Query because projects are infinite/growing) -->
         <div class="projects-grid mt-medium">
             <?php
             // Query ALL published projects
@@ -40,9 +52,9 @@
                     $hidden_class = ($count >= 6) ? 'hidden-card' : '';
                     $bg_image = get_the_post_thumbnail_url(get_the_ID(), 'large');
                     
-                    // Fallback image if no featured image is set
+                    // Dynamic fallback image from Theme Options
                     if (!$bg_image) {
-                        $bg_image = 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600&auto=format&fit=crop';
+                        $bg_image = $fallback_img;
                     }
                     ?>
                     
@@ -72,3 +84,4 @@
 
     </div>
 </div>
+

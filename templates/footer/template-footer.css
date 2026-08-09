@@ -119,3 +119,145 @@
         gap: 40px;
     }
 }
+
+/* --- FLOATING CONTACT WIDGET --- */
+.ff-floating-widget {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 99999;
+    font-family: sans-serif;
+}
+
+/* The Menu Items Stacked Above the Main Button */
+.ff-widget-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* When the widget is open */
+.ff-floating-widget.is-open .ff-widget-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Individual Action Bubbles */
+.ff-widget-item {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #0b1a2f;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    position: relative;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.ff-widget-item:hover {
+    transform: scale(1.1);
+    background-color: #00b4d8;
+}
+
+/* Specific brand colors for icons if desired */
+.ff-widget-item.whatsapp { background-color: #25d366; }
+.ff-widget-item.phone { background-color: #00b4d8; }
+.ff-widget-item.quote { background-color: #0b1a2f; }
+
+/* Tooltip text next to buttons */
+.ff-tooltip {
+    position: absolute;
+    right: 65px;
+    background-color: #0b1a2f;
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.ff-widget-item:hover .ff-tooltip {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* The Main Toggle Button (The Anchor) */
+.ff-widget-main-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #00b4d8;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0, 180, 216, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+}
+
+.ff-widget-main-btn:hover {
+    transform: scale(1.05);
+    background-color: #0096b4;
+}
+
+/* Hamburger Icon inside Main Button */
+.ff-burger-icon {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 22px;
+    height: 16px;
+    transition: opacity 0.3s ease;
+}
+
+.ff-burger-icon .line {
+    width: 100%;
+    height: 2px;
+    background-color: #ffffff;
+    border-radius: 2px;
+}
+
+/* Close text/icon state */
+.ff-close-text {
+    position: absolute;
+    font-size: 2rem;
+    color: #ffffff;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    line-height: 1;
+}
+
+/* State changes when widget is open */
+.ff-floating-widget.is-open .ff-widget-main-btn {
+    background-color: #0b1a2f;
+}
+
+.ff-floating-widget.is-open .ff-burger-icon {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.ff-floating-widget.is-open .ff-close-text {
+    opacity: 1;
+    transform: scale(1);
+}

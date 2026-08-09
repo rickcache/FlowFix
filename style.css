@@ -1,10 +1,145 @@
 /* --- Global CSS Reset --- */
-*, *::before, *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    overflow-x: hidden; /* Prevents accidental horizontal scrolling */
+  overflow-x: hidden; /* Prevents accidental horizontal scrolling */
+}
+
+/* --- Move Desktop Menu to the Right --- */
+.desktop-nav {
+  margin-left: auto; /* Pushes the menu away from the logo */
+  margin-right: 80px; /* Controls the gap between the menu and the Contact button */
+}
+
+/* Ensure the header container allows the auto margin to work properly */
+.site-header .header-container {
+  justify-content: flex-start;
+}
+
+/* --- Desktop Menu Active Link Highlighting --- */
+.desktop-menu-list .current-menu-item > a {
+  font-weight: bold;
+  color: #0056b3; /* Change to your brand's highlight color */
+  border-bottom: 2px solid #0056b3;
+}
+
+/* --- Mobile Sidebar Setup --- */
+.mobile-sidebar {
+  position: fixed;
+  top: 0;
+  right: -100%; /* Hides it off-screen to the right */
+  width: 300px;
+  height: 100vh;
+  background-color: #0a1f35;
+  color: #fff;
+  z-index: 10000;
+  transition: right 0.3s ease-in-out;
+  padding: 20px;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.mobile-sidebar.is-active {
+  right: 0; /* Slides it in */
+}
+
+/* --- Overlay Setup --- */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+.sidebar-overlay.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* --- Utilities --- */
+.no-scroll {
+  overflow: hidden;
+}
+
+.close-sidebar-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+/* Hide desktop elements on mobile */
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none;
+  }
+}
+
+/* Hide mobile elements on desktop */
+@media (min-width: 769px) {
+  .hamburger-btn {
+    display: none;
+  }
+}
+
+/* Smooth button and card hover feedback */
+.btn-blue,
+.btn-submit,
+.service-card,
+.capsule-btn {
+  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.btn-blue:hover,
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 180, 216, 0.3);
+}
+
+/* Service card subtle lift */
+.service-card:hover {
+  transform: translateY(-1px);
+}
+
+/* --- Universal Section & Element Transitions --- */
+.flowfix-fade-section {
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+/* The active state triggered by your universal script */
+.flowfix-fade-section.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- Manual Section Transition Wrapper --- */
+.flowfix-transition-box {
+  opacity: 0;
+  transform: scale(0.98) translateY(20px);
+  transition:
+    opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.flowfix-transition-box.is-visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
 }

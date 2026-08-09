@@ -1,32 +1,22 @@
 <div class="page-contact-wrapper pt-large pb-large">
+
+<!-- REQUIRED: Tells WordPress which backend function to trigger -->
+<input type="hidden" name="action" value="submit_lead">
+
+<!-- NEW: The Security Token (Nonce) -->
+<?php wp_nonce_field('submit_lead_action', 'lead_nonce'); ?>
+
     <?php
-    // Query the 'editable' CPT for the Contact page
-    $contact_query = new WP_Query( array(
-        'post_type'      => 'editable',
-        'name'           => 'page-contact', 
-        'posts_per_page' => 1,
-    ) );
-
-    // Default Fallbacks
-    $title = 'CONTACT';
+    // Fetch variables directly from Native Theme Options!
     
-    $text_heading = 'Get In Touch';
-    $text_body = "We are here to answer any questions you may have about our services.\n\nReach out to us and we'll respond as soon as we can.\n\nEven if there is something you have always wanted to experience and can't find it on FlowFix, let us know and we promise we'll do our best to find it for you.";
+    $title        = get_option('ff_cp_main_title', 'CONTACT');
+    $text_heading = get_option('ff_cp_text_heading', 'Get In Touch');
+    $text_body    = get_option('ff_cp_text_body', "We are here to answer any questions you may have about our services.\n\nReach out to us and we'll respond as soon as we can.\n\nEven if there is something you have always wanted to experience and can't find it on FlowFix, let us know and we promise we'll do our best to find it for you.");
     
-    if ( $contact_query->have_posts() ) {
-        $contact_query->the_post();
-        
-        $dyn_title = get_post_meta( get_the_ID(), 'contact_title', true );
-        if ( !empty($dyn_title) ) $title = $dyn_title;
-
-        $dyn_heading = get_post_meta( get_the_ID(), 'contact_text_heading', true );
-        if ( !empty($dyn_heading) ) $text_heading = $dyn_heading;
-
-        $dyn_body = get_post_meta( get_the_ID(), 'contact_text_body', true );
-        if ( !empty($dyn_body) ) $text_body = $dyn_body;
-
-        wp_reset_postdata();
-    }
+    // Dynamic Contact Info
+    $phone   = get_option('ff_cp_phone', '+61 2 1234 5678');
+    $email   = get_option('ff_cp_email', 'info@flowfix.com.au');
+    $address = get_option('ff_cp_address', 'Sydney, NSW Australia');
     ?>
 
     <div class="contact-container">
@@ -39,29 +29,44 @@
             <!-- Left Side: Text & Contact Details -->
             <div class="w-50 contact-text-content">
                 <h2><?php echo esc_html($text_heading); ?></h2>
-                <?php echo wpautop(esc_html($text_body)); ?>
+                <?php echo wpautop(wp_kses_post($text_body)); ?>
                 
-                <!-- Moved the Contact Info here -->
+                <!-- Dynamic Contact Info -->
                 <div class="info-details mt-medium">
                     <div class="info-item">
                         <strong>Phone:</strong>
-                        <span>+61 2 1234 5678</span>
+                        <span><?php echo esc_html($phone); ?></span>
                     </div>
                     <div class="info-item">
                         <strong>Email:</strong>
-                        <span>info@flowfix.com.au</span>
+                        <span><?php echo esc_html($email); ?></span>
                     </div>
                     <div class="info-item">
                         <strong>Address:</strong>
-                        <span>Sydney, NSW Australia</span>
+                        <span><?php echo esc_html($address); ?></span>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Side: The Form in place of the grey box -->
+           <!-- Right Side: The Form -->
             <div class="w-50">
                 <div class="contact-form-box">
-                    <form action="#" method="POST" class="flowfix-form">
+                    
+                    <!-- Success Message (Shows only after submission) -->
+                    <?php if (isset($_GET['status']) && $_GET['status'] == 'success') : ?>
+                        <div class="success-message" style="background: rgba(0, 188, 212, 0.1); border-left: 4px solid #00bcd4; padding: 15px; margin-bottom: 20px; color: #fff;">
+                            <strong>Thank you!</strong> Your message has been received and your account created. We will be in touch shortly.
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Updated Form Action & Method -->
+                    <form action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="POST" class="flowfix-form">
+                        
+                        <!-- REQUIRED: Tells WordPress which backend function to trigger -->
+                        <input type="hidden" name="action" value="submit_lead">
+                        
+                        <!-- REQUIRED: The Security Token MUST be inside the form! -->
+                        <?php wp_nonce_field('submit_lead_action', 'lead_nonce'); ?>
                         
                         <div class="form-group-row">
                             <div class="form-group">
@@ -106,7 +111,6 @@
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

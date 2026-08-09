@@ -113,15 +113,21 @@
   margin-top: 180px;
 }
 
-/* The Yellow Circle */
+/* The SVG Badge (Replaces the Yellow Circle) */
 .card-icon-placeholder {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 45px; /* Scaled up to match the bigger card */
-  height: 45px;
-  background-color: #dfcd15; /* Adjusted to match the exact image yellow */
-  border-radius: 50%;
+  top: 15px;
+  right: 15px;
+  width: 70px; /* Adjust if your SVG needs to be bigger/smaller */
+  height: 70px;
+
+  /* Link to your SVG file. Assuming your style.css is in the root and badge.svg is in an 'images' or 'assets' folder */
+  background-image: url("../assests/images/badge.svg");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  z-index: 2;
 }
 
 /* The Horizontal Line near the bottom */

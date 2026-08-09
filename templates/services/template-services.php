@@ -1,58 +1,42 @@
 <div class="page-services-wrapper pt-large pb-large">
     <div class="services-container">
         
-        <h1 class="services-main-title">SERVICES</h1>
+        <?php
+        // Fetch variables directly from Native Theme Options!
+        $main_title = get_option('ff_sp_main_title', 'SERVICES');
+
+        // CTA Variables
+        $cta_title = get_option('ff_sp_cta_title', 'Need Expert Plumbing Help?');
+        $cta_sub = get_option('ff_sp_cta_sub', 'Get in touch with our professionals today.');
+        $cta_btn_text = get_option('ff_sp_cta_btn_text', 'BOOK NOW');
+        $cta_btn_link = get_option('ff_sp_cta_btn_link', site_url('/contact'));
+
+        // Default Services Data
+        $default_services = array(
+            1 => array('title' => 'Emergency Plumbing', 'desc' => 'Fast 24/7 emergency plumbing services when you need them most.', 'link' => site_url('/emergency-plumbing'), 'img' => 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600&auto=format&fit=crop'),
+            2 => array('title' => 'Blocked Drains', 'desc' => 'Clear stubborn drain blockages quickly with advanced equipment.', 'link' => site_url('/blocked-drains'), 'img' => 'https://images.unsplash.com/photo-1607472586893-edb57cb31414?q=80&w=600&auto=format&fit=crop'),
+            3 => array('title' => 'Leak Detection', 'desc' => 'Accurate leak detection to prevent costly water damage and repairs.', 'link' => site_url('/leak-detection'), 'img' => 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=600&auto=format&fit=crop'),
+            4 => array('title' => 'Hot Water Systems', 'desc' => 'Installation, repairs, and maintenance for reliable hot water all year.', 'link' => site_url('/hot-water-systems'), 'img' => 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=600&auto=format&fit=crop'),
+            5 => array('title' => 'Gas Plumbing', 'desc' => 'Licensed gas fitting services completed safely and to Australian standards.', 'link' => site_url('/gas-plumbing'), 'img' => 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?q=80&w=600&auto=format&fit=crop'),
+            6 => array('title' => 'Bathroom Renovations', 'desc' => 'Complete bathroom plumbing solutions for stylish and functional renovations.', 'link' => site_url('/bathroom-renovations'), 'img' => 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?q=80&w=600&auto=format&fit=crop')
+        );
+
+        // Fetch Dynamic Services Data
+        $services = array();
+        for ($i = 1; $i <= 6; $i++) {
+            $services[$i] = array(
+                'title' => get_option('ff_sp_card_'.$i.'_title', $default_services[$i]['title']),
+                'desc'  => get_option('ff_sp_card_'.$i.'_desc', $default_services[$i]['desc']),
+                'link'  => get_option('ff_sp_card_'.$i.'_link', $default_services[$i]['link']),
+                'img'   => get_option('ff_sp_card_'.$i.'_img', $default_services[$i]['img'])
+            );
+        }
+        ?>
+
+        <h1 class="services-main-title"><?php echo esc_html($main_title); ?></h1>
 
         <div class="services-grid mt-large">
-            <?php
-            // --- CTA Variables ---
-        $cta_title = 'Need Expert Plumbing Help?';
-        $cta_sub = 'Get in touch with our professionals today.';
-        $cta_btn_text = 'BOOK NOW';
-        $cta_btn_link = site_url('/contact');
-            $services = array(
-                array(
-                    'title' => 'Emergency Plumbing',
-                    'desc'  => 'Fast 24/7 emergency plumbing services when you need them most.',
-                    'link'  => site_url('/emergency-plumbing'),
-                    'img'   => 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?q=80&w=600&auto=format&fit=crop' // Example Image
-                ),
-                array(
-                    'title' => 'Blocked Drains',
-                    'desc'  => 'Clear stubborn drain blockages quickly with advanced equipment.',
-                    'link'  => site_url('/blocked-drains'),
-                    'img'   => 'https://images.unsplash.com/photo-1607472586893-edb57cb31414?q=80&w=600&auto=format&fit=crop'
-                ),
-                array(
-                    'title' => 'Leak Detection',
-                    'desc'  => 'Accurate leak detection to prevent costly water damage and repairs.',
-                    'link'  => site_url('/leak-detection'),
-                    'img'   => 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=600&auto=format&fit=crop'
-                ),
-                array(
-                    'title' => 'Hot Water Systems',
-                    'desc'  => 'Installation, repairs, and maintenance for reliable hot water all year.',
-                    'link'  => site_url('/hot-water-systems'),
-                    'img'   => 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=600&auto=format&fit=crop'
-                ),
-                array(
-                    'title' => 'Gas Plumbing',
-                    'desc'  => 'Licensed gas fitting services completed safely and to Australian standards.',
-                    'link'  => site_url('/gas-plumbing'),
-                    'img'   => 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?q=80&w=600&auto=format&fit=crop'
-                ),
-                array(
-                    'title' => 'Bathroom Renovations',
-                    'desc'  => 'Complete bathroom plumbing solutions for stylish and functional renovations.',
-                    'link'  => site_url('/bathroom-renovations'),
-                    'img'   => 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?q=80&w=600&auto=format&fit=crop'
-                )
-            );
-
-            foreach ( $services as $service ) :
-            ?>
-
-            
+            <?php foreach ( $services as $service ) : ?>
                 <!-- Linking the whole card -->
                 <a href="<?php echo esc_url($service['link']); ?>" class="service-card">
                     
@@ -75,7 +59,8 @@
                 </a>
             <?php endforeach; ?>
         </div>
-        <!-- The newly added CTA Block replacing the empty bottom block -->
+
+        <!-- CTA Block -->
         <div class="services-cta-box mt-xlarge">
             <div class="cta-text">
                 <h3><?php echo esc_html($cta_title); ?></h3>
@@ -85,6 +70,7 @@
                 <a href="<?php echo esc_url($cta_btn_link); ?>" class="btn-cta"><?php echo esc_html($cta_btn_text); ?></a>
             </div>
         </div>
+
     </div>
 </div>
 
@@ -344,3 +330,65 @@
   }
 }
 </style>
+
+
+<!-- Animation -->
+
+<style>
+  /* --- SERVICES PAGE CARD ANIMATIONS --- */
+
+/* Base hidden state for all service cards */
+.page-services-wrapper .service-card {
+    opacity: 0;
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+/* Odd Cards (1, 3, 5) start shifted to the left */
+.page-services-wrapper .service-card:nth-child(odd) {
+    transform: translateX(-60px);
+}
+
+/* Even Cards (2, 4, 6) start shifted to the right */
+.page-services-wrapper .service-card:nth-child(even) {
+    transform: translateX(60px);
+}
+
+/* --- Active Triggered States --- */
+.page-services-wrapper.is-animated .service-card {
+    opacity: 1;
+    transform: translateX(0); /* Settle perfectly into place */
+}
+
+/* Staggered cascading delays so they ripple down the page smoothly */
+.page-services-wrapper.is-animated .service-card:nth-child(1) { transition-delay: 0.1s; }
+.page-services-wrapper.is-animated .service-card:nth-child(2) { transition-delay: 0.2s; }
+.page-services-wrapper.is-animated .service-card:nth-child(3) { transition-delay: 0.3s; }
+.page-services-wrapper.is-animated .service-card:nth-child(4) { transition-delay: 0.4s; }
+.page-services-wrapper.is-animated .service-card:nth-child(5) { transition-delay: 0.5s; }
+.page-services-wrapper.is-animated .service-card:nth-child(6) { transition-delay: 0.6s; }
+
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const servicesWrapper = document.querySelector('.page-services-wrapper');
+
+    if (servicesWrapper) {
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    servicesWrapper.classList.add('is-animated');
+                    observer.unobserve(entry.target); // Runs cleanly once
+                }
+            });
+        }, {
+            root: null,
+            rootMargin: '0px 0px -80px 0px',
+            threshold: 0.15 // Triggers when 15% of the page wrapper is visible
+        });
+
+        observer.observe(servicesWrapper);
+    }
+});
+</script>

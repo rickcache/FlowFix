@@ -1,62 +1,25 @@
-
-
 <!-- HOME -->
 <section class="home-hero" id="home">
     <div class="hero-container">
         <?php
-        // Query the 'editable' CPT for the hero section
-        $hero_query = new WP_Query( array(
-            'post_type'      => 'editable',
-            'name'           => 'home-hero', 
-            'posts_per_page' => 1,
-        ) );
-
-        // Initialize variables for dynamic content
-        $bg_image_url = '';
-        $title = 'Welcome to <span class="text-blue">FlowFlix</span>';
-        $subtitle = '<span class="text-blue">Fast. Reliable. Licensed.</span> 24/7 Emergency Plumbing.';
-        $btn_text = 'contact us';
-        $btn_link = '#';
+        // Fetch variables directly from our Native Theme Options! 
+        // Format: get_option('database_key', 'Fallback Value');
         
+        $title    = get_option('ff_hero_title', 'Welcome to <span class="text-blue">FlowFix</span>');
+        $subtitle = get_option('ff_hero_subtitle', '<span class="text-blue">Fast. Reliable. Licensed.</span> 24/7 Emergency Plumbing.');
+        $btn_text = get_option('ff_hero_btn_text', 'contact us');
+        $btn_link = get_option('ff_hero_btn_link', '#');
+        $bg_image_url = get_option('ff_hero_bg_image', ''); // We will add an image uploader to the dashboard next!
+
+        // Fetch dynamic card data
         $cards = array(
-            array('text' => 'Quality & Trust', 'icon' => ''),
-            array('text' => 'Licensed Experts', 'icon' => ''),
-            array('text' => '24/7 Support', 'icon' => '')
+            array('text' => get_option('ff_hero_card_1_text', 'Quality & Trust')),
+            array('text' => get_option('ff_hero_card_2_text', 'Licensed Experts')),
+            array('text' => get_option('ff_hero_card_3_text', '24/7 Support'))
         );
-
-        if ( $hero_query->have_posts() ) {
-            $hero_query->the_post();
-            
-            // Override fallbacks with dynamic data if they exist
-            if ( has_post_thumbnail() ) {
-                $bg_image_url = get_the_post_thumbnail_url( get_the_ID(), 'full' );
-            }
-            
-            $dynamic_title = get_the_title();
-            if ( !empty($dynamic_title) && $dynamic_title !== 'Auto Draft' ) {
-                $title = $dynamic_title; // Note: Instruct client to use HTML spans for blue text in the title
-            }
-
-            $dynamic_subtitle = get_post_meta( get_the_ID(), 'hero_subtitle', true );
-            if ( !empty($dynamic_subtitle) ) $subtitle = $dynamic_subtitle;
-
-            $dynamic_btn_text = get_post_meta( get_the_ID(), 'hero_btn_text', true );
-            if ( !empty($dynamic_btn_text) ) $btn_text = $dynamic_btn_text;
-
-            $dynamic_btn_link = get_post_meta( get_the_ID(), 'hero_btn_link', true );
-            if ( !empty($dynamic_btn_link) ) $btn_link = $dynamic_btn_link;
-
-            // Fetch dynamic card data
-            for ($i = 1; $i <= 3; $i++) {
-                $card_text = get_post_meta( get_the_ID(), 'hero_card_' . $i . '_text', true );
-                if ( !empty($card_text) ) $cards[$i-1]['text'] = $card_text;
-            }
-            
-            wp_reset_postdata();
-        }
         
         // Inline style for dynamic background image fallback
-        $bg_style = $bg_image_url ? 'background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(' . esc_url($bg_image_url) . ');' : 'background-color: #2a2a2a;'; // Replace with a default image URL if desired
+        $bg_style = $bg_image_url ? 'background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(' . esc_url($bg_image_url) . ');' : 'background-color: #2a2a2a;'; 
         ?>
 
         <div class="hero-bg" style="<?php echo $bg_style; ?>"></div>
@@ -64,16 +27,16 @@
         <div class="hero-content-wrapper">
             <div class="hero-text-content">
                 
-                <h1 class="hero-title"><?php echo $title; ?></h1>
-                <p class="hero-subtitle"><?php echo $subtitle; ?></p>
+                <!-- We use wp_kses_post instead of esc_html here so the <span> tags for the blue text actually render! -->
+                <h1 class="hero-title"><?php echo wp_kses_post($title); ?></h1>
+                <p class="hero-subtitle"><?php echo wp_kses_post($subtitle); ?></p>
                 <a href="<?php echo esc_url($btn_link); ?>" class="hero-btn"><?php echo esc_html($btn_text); ?></a>
             </div>
 
             <div class="hero-trust-cards">
                 <?php foreach ($cards as $index => $card) : ?>
                     <div class="trust-card card-<?php echo $index + 1; ?>">
-                        <div class="card-icon-placeholder">
-                            </div>
+                       <img src="<?php echo get_template_directory_uri(); ?>/assests/images/badge.png" class="card-icon-placeholder" alt="Trust Badge">
                         <div class="card-line"></div>
                         <p class="card-text"><?php echo esc_html($card['text']); ?></p>
                     </div>
@@ -87,56 +50,49 @@
 <section class="home-services" id="services">
     <div class="services-container">
         <?php
-        // Query the 'editable' CPT for the services section
-        $services_query = new WP_Query( array(
-            'post_type'      => 'editable',
-            'name'           => 'home-services', 
-            'posts_per_page' => 1,
-        ) );
-
-        // Fallback Data based on the provided list and image
-        $heading = 'SERVICES';
+        // Fetch variables directly from our Native Theme Options!
+        
+        $heading = get_option('ff_services_heading', 'SERVICES');
         
         // Stats Banner Data
-        $stat_1_num = '1200'; $stat_1_text = 'companies';
-        $stat_2_num = '1000+'; $stat_2_text = 'customers served';
-        $stat_3_num = '1000+'; $stat_3_text = 'customers served';
-        $stat_4_num = '1000+'; $stat_4_text = 'customers served';
-        $stat_tagline = 'We fix <span class="text-blue-light">pipes</span> like they are our own'; // Adjusted from 'wires' to 'pipes' for plumbing
+        $stat_1_num = get_option('ff_stat_1_num', '1200'); 
+        $stat_1_text = get_option('ff_stat_1_text', 'companies');
+        
+        $stat_2_num = get_option('ff_stat_2_num', '1000+'); 
+        $stat_2_text = get_option('ff_stat_2_text', 'customers served');
+        
+        $stat_3_num = get_option('ff_stat_3_num', '1000+'); 
+        $stat_3_text = get_option('ff_stat_3_text', 'customers served');
+        
+        $stat_4_num = get_option('ff_stat_4_num', '1000+'); 
+        $stat_4_text = get_option('ff_stat_4_text', 'customers served');
+        
+        $stat_tagline = get_option('ff_stat_tagline', 'We fix <span class="text-blue-light">pipes</span> like they are our own');
 
         // Bottom CTA Data
-        $cta_sub = 'EMERGENCY FIXING?';
-        $cta_title = 'Contact Us Right now';
-        $cta_btn_text = 'Book a Quote';
-        $cta_btn_link = '#';
+        $cta_sub = get_option('ff_services_cta_sub', 'EMERGENCY FIXING?');
+        $cta_title = get_option('ff_services_cta_title', 'Contact Us Right now');
+        $cta_btn_text = get_option('ff_services_cta_btn_text', 'Book a Quote');
+        $cta_btn_link = get_option('ff_services_cta_btn_link', '#');
 
-        // 6 Service Cards mapped to the layout in Services.jpg
-        $cards = array(
-            1 => array('title' => 'Commercial Plumbing', 'class' => 'card-top-wide', 'img' => ''),
-            2 => array('title' => 'Blocked Drains', 'class' => 'card-top-square', 'img' => ''),
-            3 => array('title' => 'Emergency Plumbing', 'class' => 'card-bot-small', 'img' => ''),
-            4 => array('title' => 'Hot Water Systems', 'class' => 'card-bot-tall', 'img' => ''),
-            5 => array('title' => 'Leak Detection', 'class' => 'card-bot-tall', 'img' => ''),
-            6 => array('title' => 'Burst Pipes', 'class' => 'card-bot-tall', 'img' => '')
+        // 6 Service Cards with default classes mapped to the layout
+        $default_cards = array(
+            1 => array('title' => 'Commercial Plumbing', 'class' => 'card-top-wide'),
+            2 => array('title' => 'Blocked Drains', 'class' => 'card-top-square'),
+            3 => array('title' => 'Emergency Plumbing', 'class' => 'card-bot-small'),
+            4 => array('title' => 'Hot Water Systems', 'class' => 'card-bot-tall'),
+            5 => array('title' => 'Leak Detection', 'class' => 'card-bot-tall'),
+            6 => array('title' => 'Burst Pipes', 'class' => 'card-bot-tall')
         );
 
-        if ( $services_query->have_posts() ) {
-            $services_query->the_post();
-            
-            // Dynamic Overrides (Client can add these Custom Fields in WP Admin)
-            $dyn_heading = get_post_meta( get_the_ID(), 'services_heading', true );
-            if ( !empty($dyn_heading) ) $heading = $dyn_heading;
-
-            // Fetch dynamic card data
-            for ($i = 1; $i <= 6; $i++) {
-                $card_title = get_post_meta( get_the_ID(), 'service_card_' . $i . '_title', true );
-                $card_img = get_post_meta( get_the_ID(), 'service_card_' . $i . '_image', true ); // URL of image
-                
-                if ( !empty($card_title) ) $cards[$i]['title'] = $card_title;
-                if ( !empty($card_img) ) $cards[$i]['img'] = $card_img;
-            }
-            
-            wp_reset_postdata();
+        $cards = array();
+        for ($i = 1; $i <= 6; $i++) {
+            $cards[$i] = array(
+                'title' => get_option('ff_service_card_' . $i . '_title', $default_cards[$i]['title']),
+                'class' => $default_cards[$i]['class'],
+                'img'   => get_option('ff_service_card_' . $i . '_img', ''),
+                'link'  => get_option('ff_service_card_' . $i . '_link', site_url('/services')) 
+            );
         }
         ?>
 
@@ -147,8 +103,8 @@
         </div>
         
         <div class="services-top-grid">
-            <!-- Card 1: Wide -->
-            <div class="service-card <?php echo $cards[1]['class']; ?>">
+            <!-- Card 1: Wide (Now the card ITSELF is the link) -->
+            <a href="<?php echo esc_url($cards[1]['link']); ?>" class="service-card <?php echo $cards[1]['class']; ?>" style="text-decoration: none; color: inherit;">
                 <div class="card-img-wrapper">
                     <?php if($cards[1]['img']) : ?>
                         <img src="<?php echo esc_url($cards[1]['img']); ?>" alt="<?php echo esc_attr($cards[1]['title']); ?>">
@@ -157,10 +113,10 @@
                     <?php endif; ?>
                 </div>
                 <h3 class="card-label"><?php echo esc_html($cards[1]['title']); ?></h3>
-            </div>
+            </a>
 
             <!-- Card 2: Square -->
-            <div class="service-card <?php echo $cards[2]['class']; ?>">
+            <a href="<?php echo esc_url($cards[2]['link']); ?>" class="service-card <?php echo $cards[2]['class']; ?>" style="text-decoration: none; color: inherit;">
                 <div class="card-img-wrapper">
                     <?php if($cards[2]['img']) : ?>
                         <img src="<?php echo esc_url($cards[2]['img']); ?>" alt="<?php echo esc_attr($cards[2]['title']); ?>">
@@ -168,9 +124,9 @@
                         <div class="placeholder-bg"></div>
                     <?php endif; ?>
                 </div>
-                <a href="#" class="view-all-link">view all</a>
+                <span class="view-all-link">view all</span>
                 <h3 class="card-label"><?php echo esc_html($cards[2]['title']); ?></h3>
-            </div>
+            </a>
         </div>
     </div>
 
@@ -195,7 +151,7 @@
                 <span class="stat-text"><?php echo esc_html($stat_4_text); ?></span>
             </div>
             <div class="stat-tagline">
-                <?php echo $stat_tagline; ?>
+                <?php echo wp_kses_post($stat_tagline); ?>
             </div>
         </div>
     </div>
@@ -213,7 +169,7 @@
                 </div>
 
                 <!-- Card 3: Small Square -->
-                <div class="service-card <?php echo $cards[3]['class']; ?>">
+                <a href="<?php echo esc_url($cards[3]['link']); ?>" class="service-card <?php echo $cards[3]['class']; ?>" style="text-decoration: none; color: inherit;">
                     <div class="card-img-wrapper">
                         <?php if($cards[3]['img']) : ?>
                             <img src="<?php echo esc_url($cards[3]['img']); ?>" alt="<?php echo esc_attr($cards[3]['title']); ?>">
@@ -221,15 +177,15 @@
                             <div class="placeholder-bg"></div>
                         <?php endif; ?>
                     </div>
-                    <a href="#" class="view-all-link">view all</a>
+                    <span class="view-all-link">view all</span>
                     <h3 class="card-label"><?php echo esc_html($cards[3]['title']); ?></h3>
-                </div>
+                </a>
             </div>
 
             <!-- Right Side: 3 Tall Cards -->
             <div class="bottom-right-col">
                 <?php for($i = 4; $i <= 6; $i++) : ?>
-                    <div class="service-card <?php echo $cards[$i]['class']; ?>">
+                    <a href="<?php echo esc_url($cards[$i]['link']); ?>" class="service-card <?php echo $cards[$i]['class']; ?>" style="text-decoration: none; color: inherit;">
                         <div class="card-img-wrapper">
                             <?php if($cards[$i]['img']) : ?>
                                 <img src="<?php echo esc_url($cards[$i]['img']); ?>" alt="<?php echo esc_attr($cards[$i]['title']); ?>">
@@ -237,9 +193,9 @@
                                 <div class="placeholder-bg"></div>
                             <?php endif; ?>
                         </div>
-                        <a href="#" class="view-all-link">view all</a>
+                        <span class="view-all-link">view all</span>
                         <h3 class="card-label"><?php echo esc_html($cards[$i]['title']); ?></h3>
-                    </div>
+                    </a>
                 <?php endfor; ?>
             </div>
         </div>
@@ -251,73 +207,45 @@
     <div class="about-container">
         
         <?php
-        // Query the 'editable' CPT for the about section
-        $about_query = new WP_Query( array(
-            'post_type'      => 'editable',
-            'name'           => 'home-about', 
-            'posts_per_page' => 1,
-        ) );
-
-        // Default Fallbacks
-        $heading = 'ABOUT US';
-        $img_left = ''; 
-        $img_right = '';
+        // Fetch variables directly from our Native Theme Options!
+        $heading    = get_option('ff_about_heading', 'ABOUT US');
+        $img_left   = get_option('ff_about_img_left', ''); 
+        $img_right  = get_option('ff_about_img_right', '');
         
-        $left_title = 'Our History';
-        $left_text = "FlowFix Plumbing was established in 2014 with a simple vision: to provide honest, reliable, and high-quality plumbing services that customers could depend on. What began as a small local operation with a single service vehicle has grown into one of Sydney's trusted plumbing companies through consistent workmanship, transparent pricing, and exceptional customer service. Over the years, we have completed thousands of successful projects ranging from emergency plumbing repairs and blocked drain solutions to large-scale commercial installations and complete plumbing renovations. Our continued growth has been driven not by advertising alone, but by the recommendations of satisfied customers who value our professionalism, reliability, and commitment to doing every job right the first time. Today, FlowFix Plumbing continues to build on that foundation, combining years of experience with modern technology and skilled craftsmanship to deliver plumbing solutions that stand the test of time while remaining dedicated to the local communities we proudly serve.";
+        $left_title = get_option('ff_about_left_title', 'Our History');
+        $left_text  = get_option('ff_about_left_text', "FlowFix Plumbing was established in 2014 with a simple vision: to provide honest, reliable, and high-quality plumbing services that customers could depend on. What began as a small local operation with a single service vehicle has grown into one of Sydney's trusted plumbing companies through consistent workmanship, transparent pricing, and exceptional customer service. Over the years, we have completed thousands of successful projects ranging from emergency plumbing repairs and blocked drain solutions to large-scale commercial installations and complete plumbing renovations. Our continued growth has been driven not by advertising alone, but by the recommendations of satisfied customers who value our professionalism, reliability, and commitment to doing every job right the first time. Today, FlowFix Plumbing continues to build on that foundation, combining years of experience with modern technology and skilled craftsmanship to deliver plumbing solutions that stand the test of time while remaining dedicated to the local communities we proudly serve.");
 
-        // Specific fallbacks for the 5 timeline paragraphs
-        $timeline_paras = array(
-            array(
+        // Default fallbacks for the 5 timeline paragraphs
+        $default_timeline = array(
+            1 => array(
                 'title' => 'About Us',
                 'text'  => "At FlowFix Plumbing, we are committed to delivering dependable plumbing solutions that homeowners and businesses can trust. We understand that plumbing issues can disrupt your daily life, whether it's a leaking tap, a burst pipe, or a complete hot water system failure. That's why our team responds quickly, works efficiently, and focuses on providing long-lasting solutions instead of temporary fixes. Every project is approached with professionalism, attention to detail, and a commitment to exceeding customer expectations."
             ),
-            array(
+            2 => array(
                 'title' => 'Expert Team',
                 'text'  => "Our team consists of fully licensed and highly skilled plumbers with extensive experience across residential, commercial, and emergency plumbing services. We continuously invest in modern equipment, advanced diagnostic technology, and ongoing industry training to ensure we can tackle even the most complex plumbing challenges. From blocked drains and leak detection to gas fitting and bathroom plumbing renovations, we deliver quality workmanship that meets the highest industry standards."
             ),
-            array(
+            3 => array(
                 'title' => 'Honesty & Transparency',
                 'text'  => "Honesty and transparency are at the heart of everything we do. Before any work begins, we provide clear explanations of the issue, discuss the available solutions, and offer upfront pricing with no hidden surprises. We believe every customer deserves to understand the work being carried out in their home or business, giving them confidence that they are making the right decision. Building trust through open communication has helped us establish long-lasting relationships with our clients."
             ),
-            array(
+            4 => array(
                 'title' => 'Customer Satisfaction',
                 'text'  => "Customer satisfaction is more than a goal—it's the foundation of our business. We treat every property with respect, arrive on time, maintain a clean workspace, and ensure every repair or installation is completed with precision. Our dedication to reliability has earned us the trust of countless homeowners, landlords, builders, and local businesses who continue to choose FlowFix Plumbing whenever they need expert plumbing services."
             ),
-            array(
+            5 => array(
                 'title' => 'Local Commitment',
                 'text'  => "As a proudly local plumbing company, we take pride in serving our community with integrity, professionalism, and genuine care. Whether we're responding to an emergency in the middle of the night or helping a family upgrade their plumbing system, we approach every job with the same level of commitment and attention to detail. At FlowFix Plumbing, our mission is simple: to provide exceptional plumbing services, outstanding customer care, and reliable solutions that keep homes and businesses running smoothly for years to come."
             )
         );
 
-        if ( $about_query->have_posts() ) {
-            $about_query->the_post();
-            
-            $dyn_heading = get_post_meta( get_the_ID(), 'about_heading', true );
-            if ( !empty($dyn_heading) ) $heading = $dyn_heading;
-
-            $dyn_img_left = get_post_meta( get_the_ID(), 'about_image_left', true );
-            if ( !empty($dyn_img_left) ) $img_left = $dyn_img_left;
-
-            $dyn_img_right = get_post_meta( get_the_ID(), 'about_image_right', true );
-            if ( !empty($dyn_img_right) ) $img_right = $dyn_img_right;
-
-            $dyn_left_title = get_post_meta( get_the_ID(), 'about_left_title', true );
-            if ( !empty($dyn_left_title) ) $left_title = $dyn_left_title;
-
-            $dyn_left_text = get_post_meta( get_the_ID(), 'about_left_text', true );
-            if ( !empty($dyn_left_text) ) $left_text = $dyn_left_text;
-
-            // Fetch dynamic timeline paras
-            for ($i = 1; $i <= 5; $i++) {
-                $dyn_title = get_post_meta( get_the_ID(), 'about_para_' . $i . '_title', true );
-                $dyn_text = get_post_meta( get_the_ID(), 'about_para_' . $i . '_text', true );
-                
-                if ( !empty($dyn_title) ) $timeline_paras[$i-1]['title'] = $dyn_title;
-                if ( !empty($dyn_text) ) $timeline_paras[$i-1]['text'] = $dyn_text;
-            }
-            
-            wp_reset_postdata();
+        // Fetch dynamic timeline paras from theme options
+        $timeline_paras = array();
+        for ($i = 1; $i <= 5; $i++) {
+            $timeline_paras[] = array(
+                'title' => get_option('ff_about_para_' . $i . '_title', $default_timeline[$i]['title']),
+                'text'  => get_option('ff_about_para_' . $i . '_text', $default_timeline[$i]['text'])
+            );
         }
         ?>
 
@@ -335,7 +263,7 @@
                 <!-- Top Image -->
                 <div class="about-img-box img-top-left">
                     <?php if($img_left) : ?>
-                        <img src="<?php echo esc_url($img_left); ?>" alt="About Us">
+                        <img src="<?php echo esc_url($img_left); ?>" alt="<?php echo esc_attr($heading); ?>">
                     <?php else : ?>
                         <div class="placeholder-blue"></div>
                     <?php endif; ?>
@@ -344,7 +272,7 @@
                 <!-- Bottom Text -->
                 <div class="about-text-box border-left">
                     <h3><?php echo esc_html($left_title); ?></h3>
-                    <p><?php echo esc_html($left_text); ?></p>
+                    <p><?php echo wp_kses_post($left_text); ?></p>
                 </div>
             </div>
 
@@ -368,7 +296,7 @@
                         <?php foreach ($timeline_paras as $index => $para) : ?>
                             <div class="scroll-section" id="para-<?php echo $index; ?>">
                                 <h3><?php echo esc_html($para['title']); ?></h3>
-                                <p><?php echo esc_html($para['text']); ?></p>
+                                <p><?php echo wp_kses_post($para['text']); ?></p>
                             </div>
                         <?php endforeach; ?>
                         
@@ -399,15 +327,12 @@
     // Safety check: ensure elements exist before running script
     if (!scrollArea || sections.length === 0 || dots.length === 0) return;
 
-    // 1. Smooth scroll to section when dot is clicked
+    // 1. Smooth scroll to section when dot is clicked (UPDATED to use scrollIntoView)
     dots.forEach((dot, index) => {
         dot.addEventListener('click', () => {
-            // Using sections[0].offsetTop ensures we account for any weird padding in the box
-            const targetScroll = sections[index].offsetTop - sections[0].offsetTop;
-            
-            scrollArea.scrollTo({
-                top: targetScroll,
-                behavior: 'smooth'
+            sections[index].scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
             });
         });
     });
@@ -456,63 +381,29 @@
   });
 </script>
 
-
 <!-- WHY CHOOSE US -->
 <section class="home-why-choose">
     <div class="why-container">
         
         <?php
-        // Query the 'editable' CPT for the Why Choose Us section
-        $why_query = new WP_Query( array(
-            'post_type'      => 'editable',
-            'name'           => 'home-why-choose', 
-            'posts_per_page' => 1,
-        ) );
-
-        // Fallbacks
-        $title_1 = 'WHY';
-        $title_2 = 'CHOOSE';
-        $title_3 = 'US';
-        $box_link = site_url('/about'); // Links to the about page
+        // Fetch variables directly from our Native Theme Options!
         
-        $phone = '-2128388123';
-        $email = 'example@email.com';
-        $btn_text = 'Contact'; // Placeholder for the blank button in the design
-        $btn_link = site_url('/contact');
+        // Titles
+        $title_1 = get_option('ff_why_title_1', 'WHY');
+        $title_2 = get_option('ff_why_title_2', 'CHOOSE');
+        $title_3 = get_option('ff_why_title_3', 'US');
+        
+        // Links & Contact Info
+        $box_link = get_option('ff_why_box_link', site_url('/about')); 
+        $phone    = get_option('ff_why_phone', '-2128388123');
+        $email    = get_option('ff_why_email', 'example@email.com');
+        $btn_text = get_option('ff_why_btn_text', 'Contact'); 
+        $btn_link = get_option('ff_why_btn_link', site_url('/contact'));
 
-        $images = array(
-            1 => '', // Wide top
-            2 => '', // Small bottom left
-            3 => '', // Small bottom right
-            4 => '', // Tall right
-        );
-
-        if ( $why_query->have_posts() ) {
-            $why_query->the_post();
-            
-            // Dynamic text
-            $dyn_title_1 = get_post_meta( get_the_ID(), 'why_title_1', true );
-            if ( !empty($dyn_title_1) ) $title_1 = $dyn_title_1;
-
-            $dyn_title_2 = get_post_meta( get_the_ID(), 'why_title_2', true );
-            if ( !empty($dyn_title_2) ) $title_2 = $dyn_title_2;
-
-            $dyn_title_3 = get_post_meta( get_the_ID(), 'why_title_3', true );
-            if ( !empty($dyn_title_3) ) $title_3 = $dyn_title_3;
-
-            $dyn_phone = get_post_meta( get_the_ID(), 'why_phone', true );
-            if ( !empty($dyn_phone) ) $phone = $dyn_phone;
-
-            $dyn_email = get_post_meta( get_the_ID(), 'why_email', true );
-            if ( !empty($dyn_email) ) $email = $dyn_email;
-
-            // Dynamic images
-            for ($i = 1; $i <= 4; $i++) {
-                $dyn_img = get_post_meta( get_the_ID(), 'why_image_' . $i, true );
-                if ( !empty($dyn_img) ) $images[$i] = $dyn_img;
-            }
-            
-            wp_reset_postdata();
+        // Fetch Dynamic Images
+        $images = array();
+        for ($i = 1; $i <= 4; $i++) {
+            $images[$i] = get_option('ff_why_image_' . $i, '');
         }
         ?>
 
@@ -591,54 +482,46 @@
     <div class="process-container">
         
         <?php
-        // Query the 'editable' CPT for the Process section
-        $process_query = new WP_Query( array(
-            'post_type'      => 'editable',
-            'name'           => 'home-process', 
-            'posts_per_page' => 1,
-        ) );
-
-        $heading = 'OUR PROCESS';
+        // Fetch variables directly from our Native Theme Options!
+        $heading = get_option('ff_process_heading', 'OUR PROCESS');
         
-        // Fallback Data for 5 steps (Title + Description)
-        $steps = array(
+        // Default Fallback Data for 5 steps (Added Image URLs)
+        $default_steps = array(
             1 => array(
                 'title' => '1. Get in Touch',
-                'desc'  => "Contact our team by phone or through our online booking form. Tell us about your plumbing issue, and we'll schedule a convenient appointment or dispatch an emergency plumber immediately if urgent assistance is required."
+                'desc'  => "Contact our team by phone or through our online booking form. Tell us about your plumbing issue, and we'll schedule a convenient appointment or dispatch an emergency plumber immediately if urgent assistance is required.",
+                'img'   => get_template_directory_uri() . '/assests/images/process-1.jpg'
             ),
             2 => array(
                 'title' => '2. On-Site Inspection',
-                'desc'  => "One of our licensed plumbers arrives on time to thoroughly inspect the problem. Using modern tools and years of expertise, we identify the root cause and recommend the most effective solution."
+                'desc'  => "One of our licensed plumbers arrives on time to thoroughly inspect the problem. Using modern tools and years of expertise, we identify the root cause and recommend the most effective solution.",
+                'img'   => get_template_directory_uri() . '/assests/images/process-2.jpg'
             ),
             3 => array(
                 'title' => '3. Transparent Quote',
-                'desc'  => "Before any work begins, we provide a clear, upfront quote with no hidden fees. We'll explain the scope of work, expected timeline, and answer any questions so you know exactly what to expect."
+                'desc'  => "Before any work begins, we provide a clear, upfront quote with no hidden fees. We'll explain the scope of work, expected timeline, and answer any questions so you know exactly what to expect.",
+                'img'   => get_template_directory_uri() . '/assests/images/process-3.jpg'
             ),
             4 => array(
                 'title' => '4. Professional Repair or Installation',
-                'desc'  => "Once approved, our experienced team completes the job using high-quality materials and industry-leading techniques. We work efficiently while maintaining a clean and safe workspace, ensuring minimal disruption to your home or business."
+                'desc'  => "Once approved, our experienced team completes the job using high-quality materials and industry-leading techniques. We work efficiently while maintaining a clean and safe workspace, ensuring minimal disruption to your home or business.",
+                'img'   => get_template_directory_uri() . '/assests/images/process-4.jpg'
             ),
             5 => array(
                 'title' => '5. Final Quality Check',
-                'desc'  => "After the work is completed, we thoroughly test every repair or installation to ensure everything is functioning perfectly. We clean up the work area, walk you through the completed job, and provide maintenance advice so your plumbing continues to perform reliably for years to come."
+                'desc'  => "After the work is completed, we thoroughly test every repair or installation to ensure everything is functioning perfectly. We clean up the work area, walk you through the completed job, and provide maintenance advice so your plumbing continues to perform reliably for years to come.",
+                'img'   => get_template_directory_uri() . '/assests/images/process-5.jpg'
             )
         );
 
-        if ( $process_query->have_posts() ) {
-            $process_query->the_post();
-            
-            $dyn_heading = get_post_meta( get_the_ID(), 'process_heading', true );
-            if ( !empty($dyn_heading) ) $heading = $dyn_heading;
-
-            for ($i = 1; $i <= 5; $i++) {
-                $dyn_title = get_post_meta( get_the_ID(), 'process_step_' . $i . '_title', true );
-                $dyn_desc  = get_post_meta( get_the_ID(), 'process_step_' . $i . '_desc', true );
-                
-                if ( !empty($dyn_title) ) $steps[$i]['title'] = $dyn_title;
-                if ( !empty($dyn_desc) ) $steps[$i]['desc'] = $dyn_desc;
-            }
-            
-            wp_reset_postdata();
+        // Fetch dynamic step data from theme options
+        $steps = array();
+        for ($i = 1; $i <= 5; $i++) {
+            $steps[$i] = array(
+                'title' => get_option('ff_process_step_' . $i . '_title', $default_steps[$i]['title']),
+                'desc'  => get_option('ff_process_step_' . $i . '_desc', $default_steps[$i]['desc']),
+                'img'   => get_option('ff_process_step_' . $i . '_img', $default_steps[$i]['img'])
+            );
         }
         ?>
 
@@ -667,37 +550,42 @@
                 
                 <!-- STEP 1 (Left Pill, Text on Right) -->
                 <div class="process-pill pill-right step-1 active" data-svg-y="80">
+                    <img src="<?php echo esc_url($steps[1]['img']); ?>" class="pill-bg-image" alt="">
                     <span class="pill-text"><?php echo esc_html($steps[1]['title']); ?></span>
                     <div class="pill-circle"></div>
-                    <p class="process-desc desc-right"><?php echo esc_html($steps[1]['desc']); ?></p>
+                    <p class="process-desc desc-right"><?php echo wp_kses_post($steps[1]['desc']); ?></p>
                 </div>
 
                 <!-- STEP 2 (Right Pill, Text on Left) -->
                 <div class="process-pill pill-left step-2" data-svg-y="240">
-                    <p class="process-desc desc-left"><?php echo esc_html($steps[2]['desc']); ?></p>
+                    <img src="<?php echo esc_url($steps[2]['img']); ?>" class="pill-bg-image" alt="">
+                    <p class="process-desc desc-left"><?php echo wp_kses_post($steps[2]['desc']); ?></p>
                     <div class="pill-circle"></div>
                     <span class="pill-text"><?php echo esc_html($steps[2]['title']); ?></span>
                 </div>
 
                 <!-- STEP 3 (Left Pill, Text on Right) -->
                 <div class="process-pill pill-right step-3" data-svg-y="400">
+                    <img src="<?php echo esc_url($steps[3]['img']); ?>" class="pill-bg-image" alt="">
                     <span class="pill-text"><?php echo esc_html($steps[3]['title']); ?></span>
                     <div class="pill-circle"></div>
-                    <p class="process-desc desc-right"><?php echo esc_html($steps[3]['desc']); ?></p>
+                    <p class="process-desc desc-right"><?php echo wp_kses_post($steps[3]['desc']); ?></p>
                 </div>
 
                 <!-- STEP 4 (Right Pill, Text on Left) -->
                 <div class="process-pill pill-left step-4" data-svg-y="560">
-                    <p class="process-desc desc-left"><?php echo esc_html($steps[4]['desc']); ?></p>
+                    <img src="<?php echo esc_url($steps[4]['img']); ?>" class="pill-bg-image" alt="">
+                    <p class="process-desc desc-left"><?php echo wp_kses_post($steps[4]['desc']); ?></p>
                     <div class="pill-circle"></div>
                     <span class="pill-text"><?php echo esc_html($steps[4]['title']); ?></span>
                 </div>
 
                 <!-- STEP 5 (Left Pill, Text on Right) -->
                 <div class="process-pill pill-right step-5" data-svg-y="720">
+                    <img src="<?php echo esc_url($steps[5]['img']); ?>" class="pill-bg-image" alt="">
                     <span class="pill-text"><?php echo esc_html($steps[5]['title']); ?></span>
                     <div class="pill-circle"></div>
-                    <p class="process-desc desc-right"><?php echo esc_html($steps[5]['desc']); ?></p>
+                    <p class="process-desc desc-right"><?php echo wp_kses_post($steps[5]['desc']); ?></p>
                 </div>
 
             </div>
@@ -795,40 +683,15 @@
 <section class="home-projects">
     <div class="projects-container">
         <?php
-        // Query the 'editable' CPT for the Projects section
-        $projects_query = new WP_Query( array(
-            'post_type'      => 'editable',
-            'name'           => 'home-projects', 
-            'posts_per_page' => 1,
-        ) );
+        // Fetch variables directly from our Native Theme Options!
 
-        // Fallbacks
-        $title_line_1 = 'FEATURED';
-        $title_line_2 = 'PROJECTS';
+        $title_line_1 = get_option('ff_projects_title_1', 'FEATURED');
+        $title_line_2 = get_option('ff_projects_title_2', 'PROJECTS');
         
-        $images = array(
-            1 => '', 
-            2 => '', 
-            3 => ''
-        );
-
-        if ( $projects_query->have_posts() ) {
-            $projects_query->the_post();
-            
-            // Dynamic text
-            $dyn_title_1 = get_post_meta( get_the_ID(), 'projects_title_1', true );
-            if ( !empty($dyn_title_1) ) $title_1 = $dyn_title_1;
-
-            $dyn_title_2 = get_post_meta( get_the_ID(), 'projects_title_2', true );
-            if ( !empty($dyn_title_2) ) $title_2 = $dyn_title_2;
-
-            // Dynamic images
-            for ($i = 1; $i <= 3; $i++) {
-                $dyn_img = get_post_meta( get_the_ID(), 'project_image_' . $i, true );
-                if ( !empty($dyn_img) ) $images[$i] = $dyn_img;
-            }
-            
-            wp_reset_postdata();
+        // Fetch Dynamic Images
+        $images = array();
+        for ($i = 1; $i <= 3; $i++) {
+            $images[$i] = get_option('ff_project_image_' . $i, '');
         }
         ?>
 
@@ -865,92 +728,54 @@
     <div class="testimonials-container">
         
         <?php
-        // Query the 'editable' CPT for the Testimonials section
-        $testi_query = new WP_Query( array(
-            'post_type'      => 'editable',
-            'name'           => 'home-testimonials', 
-            'posts_per_page' => 1,
-        ) );
-
-        // Fallbacks
-        $heading = 'TESTIMONIALS';
-        $subheading = 'WHAT OUR CLIENT SAYS ABOUT US';
+        // Fetch variables directly from our Native Theme Options!
         
-        // CTA Fallbacks
-        $cta_title = 'Book A Quotation';
-        $cta_sub = 'Lets Get your Started';
-        $cta_btn_text = 'BOOK NOW';
-        $cta_btn_link = site_url('/contact');
+        // Header
+        $heading    = get_option('ff_testi_heading', 'TESTIMONIALS');
+        $subheading = get_option('ff_testi_subheading', 'WHAT OUR CLIENT SAYS ABOUT US');
+        
+        // CTA Box
+        $cta_title    = get_option('ff_testi_cta_title', 'Book A Quotation');
+        $cta_sub      = get_option('ff_testi_cta_sub', 'Lets Get your Started');
+        $cta_btn_text = get_option('ff_testi_cta_btn_text', 'BOOK NOW');
+        $cta_btn_link = get_option('ff_testi_cta_btn_link', site_url('/contact'));
 
         // 6 Real Testimonial Fallbacks
-        $testimonials = array(
+        $default_testimonials = array(
             1 => array(
                 'text' => '"FlowFix Plumbing responded within an hour when our kitchen pipe burst. The plumber explained everything clearly, completed the repair quickly, and left the area spotless. The entire experience was professional from start to finish. I wouldn\'t hesitate to recommend them to anyone in Sydney."',
-                'name' => 'Sarah Mitchell',
-                'img'  => '' // Will fallback to dark circle
+                'name' => 'Sarah Mitchell'
             ),
             2 => array(
                 'text' => '"We\'ve used FlowFix Plumbing several times for both emergency repairs and routine maintenance. Their team is always punctual, friendly, and transparent with pricing. It\'s refreshing to work with a company that genuinely cares about customer satisfaction."',
-                'name' => 'James Robertson',
-                'img'  => ''
+                'name' => 'James Robertson'
             ),
             3 => array(
                 'text' => '"Our hot water system failed unexpectedly, and FlowFix had a technician at our home the very same day. They replaced the system efficiently and even took the time to explain how to maintain it properly. Outstanding service and excellent workmanship."',
-                'name' => 'Emily Carter',
-                'img'  => ''
+                'name' => 'Emily Carter'
             ),
             4 => array(
                 'text' => '"I contacted FlowFix Plumbing after struggling with recurring blocked drains. They quickly identified the underlying issue using modern equipment and permanently solved the problem. The quality of their work exceeded my expectations, and their pricing was fair and honest."',
-                'name' => 'Michael Thompson',
-                'img'  => ''
+                'name' => 'Michael Thompson'
             ),
             5 => array(
                 'text' => '"From the first phone call to the final inspection, the entire process was seamless. The team arrived exactly when they said they would, completed our bathroom plumbing installation flawlessly, and made sure everything was working perfectly before leaving. Highly professional and incredibly reliable."',
-                'name' => 'Olivia Harris',
-                'img'  => ''
+                'name' => 'Olivia Harris'
             ),
             6 => array(
                 'text' => '"FlowFix Plumbing handled the plumbing for our office renovation, and the experience was exceptional. Their communication was excellent throughout the project, deadlines were met without delays, and the workmanship was first-class. We\'ll definitely continue using them for all our commercial plumbing needs."',
-                'name' => 'Daniel Walker',
-                'img'  => ''
+                'name' => 'Daniel Walker'
             )
         );
 
-        if ( $testi_query->have_posts() ) {
-            $testi_query->the_post();
-            
-            // Dynamic Header
-            $dyn_heading = get_post_meta( get_the_ID(), 'testi_heading', true );
-            if ( !empty($dyn_heading) ) $heading = $dyn_heading;
-
-            $dyn_sub = get_post_meta( get_the_ID(), 'testi_subheading', true );
-            if ( !empty($dyn_sub) ) $subheading = $dyn_sub;
-
-            // Dynamic CTA
-            $dyn_cta_title = get_post_meta( get_the_ID(), 'testi_cta_title', true );
-            if ( !empty($dyn_cta_title) ) $cta_title = $dyn_cta_title;
-
-            $dyn_cta_sub = get_post_meta( get_the_ID(), 'testi_cta_sub', true );
-            if ( !empty($dyn_cta_sub) ) $cta_sub = $dyn_cta_sub;
-
-            $dyn_cta_btn = get_post_meta( get_the_ID(), 'testi_cta_btn', true );
-            if ( !empty($dyn_cta_btn) ) $cta_btn_text = $dyn_cta_btn;
-
-            $dyn_cta_link = get_post_meta( get_the_ID(), 'testi_cta_link', true );
-            if ( !empty($dyn_cta_link) ) $cta_btn_link = $dyn_cta_link;
-
-            // Dynamic Testimonial Data
-            for ($i = 1; $i <= 6; $i++) {
-                $dyn_text = get_post_meta( get_the_ID(), 'testi_' . $i . '_text', true );
-                $dyn_name = get_post_meta( get_the_ID(), 'testi_' . $i . '_name', true );
-                $dyn_img = get_post_meta( get_the_ID(), 'testi_' . $i . '_img', true );
-                
-                if ( !empty($dyn_text) ) $testimonials[$i]['text'] = $dyn_text;
-                if ( !empty($dyn_name) ) $testimonials[$i]['name'] = $dyn_name;
-                if ( !empty($dyn_img) ) $testimonials[$i]['img'] = $dyn_img;
-            }
-            
-            wp_reset_postdata();
+        // Fetch Dynamic Testimonial Data
+        $testimonials = array();
+        for ($i = 1; $i <= 6; $i++) {
+            $testimonials[$i] = array(
+                'text' => get_option('ff_testi_' . $i . '_text', $default_testimonials[$i]['text']),
+                'name' => get_option('ff_testi_' . $i . '_name', $default_testimonials[$i]['name']),
+                'img'  => get_option('ff_testi_' . $i . '_img', '')
+            );
         }
         ?>
 
@@ -992,6 +817,7 @@
     </div>
 </section>
 
+
 <style>
 /* --- HERO Section General --- */
 .home-hero {
@@ -1021,7 +847,7 @@
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 1400px; /* Widened to fit the larger cards comfortably */
+  max-width: 1400px; 
   margin: 0 auto;
   padding: 2rem;
   display: flex;
@@ -1029,7 +855,8 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 40px;
-  margin-left: 240px;
+  /* Kept your desktop offset */
+  margin-left: 240px; 
 }
 
 /* --- Left Side Content --- */
@@ -1037,12 +864,11 @@
   flex: 1;
   min-width: 300px;
   max-width: 600px;
-  text-align: left; /* Ensuring strict left alignment */
-  left: 1000px;
+  text-align: left; 
 }
 
 .hero-title {
-  font-size: 4rem; /* Slightly larger to match image proportion */
+  font-size: 4rem; 
   font-weight: 700;
   margin: 0 0 10px 0;
   line-height: 1.1;
@@ -1055,7 +881,7 @@
 }
 
 .text-blue {
-  color: #2b7af0; /* Matched the exact blue from the image */
+  color: #2b7af0; 
 }
 
 .hero-btn {
@@ -1065,7 +891,7 @@
   text-decoration: none;
   font-size: 1.1rem;
   font-weight: 500;
-  border-radius: 50px; /* Pill shape */
+  border-radius: 50px; 
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -1079,55 +905,132 @@
 
 /* --- Right Side Cards --- */
 .hero-trust-cards {
-  
   display: flex;
-  gap: 30px; /* Increased gap */
+  gap: 20px; /* Tighter gap for smaller cards */
   position: relative;
-  margin-right: -100px;
-  /* Removed the left: -1000px bug */
+  margin-right: -100px; 
 }
 
 .trust-card {
-  background: #e1e1e1; 
- 
-  width: 220px; /* Massively increased width */
-  height: 380px; /* Massively increased height */
+  /* 1. Decreased Opacity & Glass Effect */
+  background: rgba(225, 225, 225, 0.15); 
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle glass edge */
+  
+  /* 2. Smaller Size */
+  width: 170px; 
+  height: 270px; 
+  
   border-radius: 20px;
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end; /* Pushes the line to the bottom */
-  padding: 25px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  justify-content: flex-end; 
+  padding: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  overflow: hidden; /* Crucial: Keeps the reflection inside the card */
 }
 
-/* Staggering the cards downward to match the steep step effect */
-.card-1 {
-  margin-top: 0;
-}
-.card-2 {
-  margin-top: 90px;
-}
-.card-3 {
-  margin-top: 180px;
+/* 3. The Reflective Glass Animation */
+.trust-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right, 
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(255, 255, 255, 0.4) 50%, 
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg); /* Angles the reflection */
+  animation: glass-shine 5s infinite; /* Sweeps across every 5 seconds */
+  z-index: 1; 
+  pointer-events: none; /* Prevents the glare from blocking clicks */
 }
 
-/* The Yellow Circle */
+
+@keyframes glass-shine {
+  0% { left: -150%; }
+  20% { left: 150%; }
+  100% { left: 150%; } /* The gap between 20% and 100% creates a pause between shines */
+}
+
+/* Staggering the smaller cards */
+.card-1 { margin-top: 0; }
+.card-2 { margin-top: 60px; } /* Adjusted for new size */
+.card-3 { margin-top: 120px; } /* Adjusted for new size */
+
+/* The SVG Badge (Replaces the Yellow Circle) */
 .card-icon-placeholder {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 45px; /* Scaled up to match the bigger card */
-  height: 45px;
-  background-color: #dfcd15; /* Adjusted to match the exact image yellow */
-  border-radius: 50%;
+  top: 15px;
+  right: 15px;
+  
+  /* Increased size to make the badge bigger */
+  width: 200px; 
+  height: 200px; 
+  
+  background-image: url('../images/badge.svg');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+  z-index: 2;
 }
 
-/* The Horizontal Line near the bottom */
 .card-line {
   width: 100%;
   height: 2px;
-  background-color: #333; /* Darkened for visibility */
+  /* Changed to white so it pops on the transparent glass */
+  background-color: rgba(255, 255, 255, 0.8); 
+  margin-bottom: 15px;
+  z-index: 2;
+  position: relative;
+}
+
+.card-text {
+  font-weight: 700;
+  /* Changed to white with a soft shadow for readability */
+  color: #0c0101; 
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  z-index: 2;
+  position: relative;
+  font-size: 0.95rem; /* Scaled text down to fit */
+}
+
+/* Staggering the cards */
+.card-1 { margin-top: 0; }
+.card-2 { margin-top: 90px; }
+.card-3 { margin-top: 180px; }
+
+/* The SVG Badge (Replaces the Yellow Circle) */
+.card-icon-placeholder {
+  position: absolute;
+  top: 15px; /* Keeps it near the top */
+  
+  /* The magic trick to perfectly center an absolute element horizontally */
+  left: 50%;
+  transform: translateX(-50%);
+
+  /* Increased size to make the badge bigger */
+  width: 200px; 
+  height: 200px; 
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+  z-index: 2;
+}
+
+/* The Horizontal Line */
+.card-line {
+  width: 100%;
+  height: 2px;
+  background-color: #333; 
   margin-bottom: 20px;
 }
 
@@ -1136,23 +1039,51 @@
   color: #333;
 }
 
-/* Responsive Cleanup */
+/* =========================================
+   RESPONSIVE LAYOUT STACK
+   ========================================= */
+
+/* Smaller Laptops (Max 1200px) */
+@media (max-width: 1200px) {
+  .hero-content-wrapper {
+    margin-left: auto; /* Resets the massive 240px margin */
+    padding: 2rem 5%;
+  }
+  .hero-trust-cards {
+    margin-right: 0; /* Resets the negative 100px margin */
+    gap: 20px;
+  }
+  .trust-card {
+    width: 200px; /* Scales cards down slightly to fit */
+    height: 340px;
+  }
+}
+
+/* Tablets (Max 1024px) */
 @media (max-width: 1024px) {
   .hero-content-wrapper {
     flex-direction: column;
     justify-content: center;
     text-align: center;
+    padding-top: 5rem; /* Add padding so it doesn't hit the header */
   }
 
   .hero-text-content {
     text-align: center;
+    max-width: 800px;
+  }
+
+  .hero-title {
+    font-size: 3.5rem;
   }
 
   .hero-trust-cards {
     justify-content: center;
     margin-top: 3rem;
+    flex-wrap: wrap; /* Allows cards to wrap if needed */
   }
 
+  /* Reset the steep stagger effect for a flat layout */
   .card-1,
   .card-2,
   .card-3 {
@@ -1160,9 +1091,52 @@
   }
 }
 
+/* Mobile (Max 768px) */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.8rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .hero-trust-cards {
+    gap: 20px;
+  }
+  
+  .trust-card {
+    width: 220px; /* Restore width since they will wrap */
+    height: 300px;
+  }
+}
+
+/* Small Phones (Max 480px) */
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 2.2rem;
+  }
+
+  .hero-trust-cards {
+    flex-direction: column; 
+    align-items: center;
+    width: 100%;
+  }
+
+  .trust-card {
+    width: 100%; 
+    max-width: 280px;
+    height: 200px; /* Shorter for vertical stacking */
+  }
+}
+
+/* --- GLOBAL FIX FOR RESPONSIVE LAYOUTS --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 /* --- SERVICES Section General --- */
 .home-services {
-  
   background: linear-gradient(135deg, #0b1a2f 0%, #061224 100%);
   color: #ffffff;
   padding: 5rem 0; 
@@ -1196,17 +1170,15 @@
   border-radius: 5px;
 }
 
-/* --- Service Cards (Global for 2x Hover) --- */
+/* --- Service Cards --- */
 .service-card {
   position: relative;
   background-color: #d9d9d9; 
-  border-radius: 16px; /* Slightly rounder for a modern look */
+  border-radius: 16px; 
   overflow: hidden; 
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
-
-/* Polished Card Hover: Slight lift + shadow expansion */
 
 .card-img-wrapper {
   position: absolute;
@@ -1223,18 +1195,16 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Premium buttery-smooth easing for the intense 2x zoom */
   transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
-/* The 2x Hover Effect Requested */
 .service-card:hover .card-img-wrapper img,
 .service-card:hover .placeholder-bg {
   transform: scale(2);
 }
 
 .placeholder-bg {
-  background-color: #8c9bb0; /* Darkened placeholder to fit the dark theme better */
+  background-color: #8c9bb0; 
 }
 
 .view-all-link {
@@ -1256,7 +1226,6 @@
   left: 20px;
   margin: 0;
   z-index: 2;
-  /* Added Glassmorphism effect for polish */
   background: rgba(11, 26, 47, 0.7); 
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -1270,24 +1239,19 @@
 /* --- Top Grid Layout --- */
 .services-top-grid {
   display: flex;
-  gap: 30px; /* Increased gap */
+  gap: 30px; 
   margin-bottom: 4rem;
   height: 320px;
 }
 
-.card-top-wide {
-  flex: 2.5;
-}
-
-.card-top-square {
-  flex: 1;
-}
+.card-top-wide { flex: 2.5; }
+.card-top-square { flex: 1; }
 
 /* --- Middle Stats Banner --- */
 .stats-banner-wrapper {
   display: flex;
   width: 100%;
-  background-color: transparent; /* Cleaned up background handling */
+  background-color: transparent; 
   margin-bottom: 4rem;
   position: relative;
 }
@@ -1302,7 +1266,7 @@
 
 .stats-main-cyan {
   width: 90%;
-  background: linear-gradient(90deg, #00b4d8 0%, #0096b4 100%); /* Cyan gradient */
+  background: linear-gradient(90deg, #00b4d8 0%, #0096b4 100%); 
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
   display: flex;
@@ -1337,24 +1301,23 @@
 .stat-tagline {
   font-size: 1.6rem;
   font-weight: 800;
-  color: #0b1a2f; /* Fixed contrast */
+  color: #0b1a2f; 
   max-width: 250px;
   line-height: 1.2;
 }
 
 /* --- Bottom Grid Layout --- */
-/* --- Bottom Grid Layout --- */
 .services-bottom-grid {
   display: flex;
   gap: 30px;
-  align-items: stretch; /* Forces left and right columns to be identically tall */
+  align-items: stretch; 
 }
 
 .bottom-left-col {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Locks CTA to the very top, and small card to the very bottom */
+  justify-content: space-between; 
 }
 
 .bottom-right-col {
@@ -1363,24 +1326,22 @@
   gap: 30px;
 }
 
-/* --- Emergency CTA (Left Side) --- */
-.emergency-cta {
-  margin-top: 0; /* Ensures nothing pushes this container down */
-}
+/* --- Emergency CTA --- */
+.emergency-cta { margin-top: 0; }
 
 .emergency-cta .cta-line {
   width: 100%;
-  max-width: 250px; /* Lengthened to match the line in your new image */
+  max-width: 250px; 
   height: 2px;
   background-color: #ffffff;
-  margin-top: 0; /* Crucial: Flushes the line with the top of the right cards */
+  margin-top: 0; 
   margin-bottom: 20px;
 }
 
 .emergency-cta h4 {
   font-size: 1.1rem;
   margin: 0 0 10px 0;
-  font-weight: 400; /* Thinned out to match the image */
+  font-weight: 400; 
   text-transform: uppercase;
   color: #ffffff;
 }
@@ -1389,7 +1350,7 @@
   font-size: 1.8rem;
   margin: 0 0 25px 0;
   line-height: 1.3;
-  font-weight: 400; /* Matched the clean, unbolded style in the new image */
+  font-weight: 400; 
 }
 
 .btn-blue {
@@ -1404,12 +1365,8 @@
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.btn-blue:hover {
-  background-color: #1976d2;
-  
-}
+.btn-blue:hover { background-color: #1976d2; }
 
-/* Bottom Cards Sizing */
 .card-bot-small {
   height: 220px;
   width: 100%; 
@@ -1420,25 +1377,29 @@
   height: 400px;
 }
 
-/* --- Responsive Adjustments --- */
+/* ========================================= */
+/* --- RESPONSIVE ADJUSTMENTS (Media Queries) */
+/* ========================================= */
+
+/* TABLET */
 @media (max-width: 1024px) {
   .stats-main-cyan {
     padding: 2rem;
     border-radius: 30px;
     width: 100%;
   }
-  .stats-left-gray {
-    display: none; /* Hide the gray tail on tablets */
-  }
-  .stat-tagline {
-    font-size: 1.3rem;
-  }
+  .stats-left-gray { display: none; }
+  
+  .stat-tagline { font-size: 1.3rem; }
+  
+  .services-bottom-grid { gap: 20px; }
+  .bottom-right-col { gap: 20px; }
 }
 
+/* MOBILE */
 @media (max-width: 768px) {
-  .home-services {
-    padding: 3rem 0;
-  }
+  .home-services { padding: 3rem 0; }
+  .section-title { font-size: 2.5rem; }
   
   .services-top-grid {
     flex-direction: column;
@@ -1446,7 +1407,7 @@
   }
 
   .services-bottom-grid {
-    flex-direction: column-reverse; /* Puts CTA at the bottom on mobile */
+    flex-direction: column-reverse; /* Puts CTA at the bottom */
     height: auto;
   }
 
@@ -1459,7 +1420,7 @@
   .card-bot-small,
   .card-bot-tall {
     width: 100%;
-    height: 300px; /* Uniform height for mobile */
+    height: 250px; /* Shorter for mobile to prevent infinite scrolling */
   }
 
   .stats-main-cyan {
@@ -1471,6 +1432,7 @@
   
   .stat-tagline {
     max-width: 100%;
+    font-size: 1.5rem;
   }
   
   .emergency-cta {
@@ -1478,29 +1440,31 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 2rem;
+  }
+
+  .bottom-left-col {
+    gap: 20px;
   }
 }
 
 /* --- About Us Section --- */
 .home-about {
-  background-color: #f4f5f7; /* Off-white background */
-  padding: 8rem 0; /* Increased slightly for a high-end, breathable feel */
-  color: #0b1a2f; /* FlowFix dark blue */
+  background-color: #f4f5f7; 
+  padding: 8rem 0; 
+  color: #0b1a2f; 
   font-family: sans-serif;
-  overflow: hidden; /* Prevents horizontal scrolling from offset elements */
+  overflow: hidden; 
 }
 
 .about-container {
-  /* Safe Positions Kept */
   margin-left: 8%; 
   margin-right: auto; 
-  /* Swapped hard '10rem' for percentage so it scales beautifully on laptops */
   padding: 0 8%; 
   max-width: 1600px;
 }
 
 .about-header {
-  /* Fixed invalid CSS syntax (was 4rem 6rem) */
   margin-bottom: 5rem; 
   padding: 0;
 }
@@ -1511,58 +1475,69 @@
   margin: 0;
   text-transform: uppercase;
   color: #0b1a2f;
-  letter-spacing: -1px; /* Tighter letter spacing for modern typography */
+  letter-spacing: -1px; 
   line-height: 1.1;
 }
 
 .title-underline {
   width: 120px;
   height: 5px;
-  background-color: #00b4d8; /* Cyan active color */
+  background-color: #00b4d8; 
   margin-top: 20px;
   border-radius: 5px;
 }
 
-/* --- Layout Grid --- */
+/* --- Layout Grid (UPDATED to CSS Grid) --- */
 .about-grid {
-  display: flex;
-  gap: 80px; /* Widened gap for a cleaner, editorial look */
-  align-items: stretch; /* Ensures both columns are the exact same height */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 80px;
+  row-gap: 60px;
+  align-items: start;
 }
 
 .about-col {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  /* Magic property that aligns top/bottom items perfectly */
-  justify-content: space-between; 
+  display: contents; /* Unwraps flex columns so children snap to the grid */
 }
 
 /* --- Image Boxes --- */
 .about-img-box {
   position: relative;
-  border-radius: 16px; /* Slightly softer corners */
+  border-radius: 16px; 
   width: 100%; 
   overflow: hidden;
-  /* Premium, softer shadow */
   box-shadow: 0 20px 40px rgba(11, 26, 47, 0.08);
   transition: transform 0.4s ease, box-shadow 0.4s ease;
-  
 }
 
+.about-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  display: block;
+}
 
-/* ⬇️ MANUAL CONTROL: Set top image height here ⬇️ */
+/* Map Grid Items to their Correct Positions */
 .img-top-left {
+  grid-column: 1;
+  grid-row: 1;
   height: 440px; 
 }
 
-/* ⬇️ MANUAL CONTROL: Set bottom image height to match your text here ⬇️ */
-.img-bot-right {
-  height: 700px; 
-  overflow: visible; /* Allows the shadow to show */
-  width: 82%;
-  right: 18%;
- 
+.timeline-wrapper {
+  grid-column: 2;
+  grid-row: 1;
+  width: 100%;
+}
+
+.about-img-box.img-bot-right {
+  grid-column: 2;
+  grid-row: 2;
+  height: 100%; /* Dynamically stretches to match left text height */
+  align-self: stretch; 
+  width: 100%; 
+  right: 0;
+  margin-top: 0;
 }
 
 .placeholder-blue {
@@ -1572,13 +1547,14 @@
   border-radius: 16px;
 }
 
-
 .img-bot-right img,
 .img-bot-right .placeholder-blue {
-  width: 105%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   position: relative;
   z-index: 2;
- 
+  border-radius: 16px;
 }
 
 /* --- Text Boxes --- */
@@ -1586,7 +1562,6 @@
   position: relative;
   padding: 1rem 0;
   width: 100%;
-
 }
 
 .about-text-box h3 {
@@ -1601,14 +1576,16 @@
 .about-text-box p {
   font-size: 1.15rem;
   line-height: 1.8;
-  color: #4a5568; /* Slate gray for better readability than pure #333 */
+  color: #4a5568; 
 }
 
-/* Vertical Borders (Matching the Reference Image) */
+/* Vertical Borders */
 .border-left {
+  grid-column: 1;
+  grid-row: 2;
   border-left: 4px solid #0b1a2f; 
   padding-left: 40px; 
-  margin-top: 50px; 
+  margin-top: 0; 
 }
 
 .border-right {
@@ -1618,16 +1595,12 @@
   margin-bottom: 50px; 
 }
 
-/* --- Timeline & Scrollable Area --- */
-.timeline-wrapper {
-  width: 100%;
-}
-
+/* --- Timeline Nav & Scroll Area (UPDATED Width) --- */
 .timeline-nav {
   position: relative;
   margin-bottom: 40px;
   padding: 15px 0;
-  width: 85%; 
+  width: 100%; 
   margin-left: 0; 
   margin-right: auto; 
 }
@@ -1638,8 +1611,8 @@
   left: 0;
   transform: translateY(-50%);
   width: 100%;
-  height: 3px; /* Slightly thicker for better visibility */
-  background-color: #cbd5e1; /* Softer base line */
+  height: 3px; 
+  background-color: #cbd5e1; 
   z-index: 1;
 }
 
@@ -1651,13 +1624,13 @@
 }
 
 .timeline-dots .dot {
-  width: 18px; /* Slightly larger targets for better UX */
+  width: 18px; 
   height: 18px;
   border-radius: 50%;
   background-color: #0b1a2f;
   border: 4px solid #f4f5f7; 
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Premium snap transition */
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
   padding: 0;
 }
 
@@ -1670,23 +1643,23 @@
   background-color: #00b4d8; 
   border-color: #00b4d8;
   transform: scale(1.4);
-  box-shadow: 0 0 15px rgba(0, 180, 216, 0.4); /* Glow effect on active */
+  box-shadow: 0 0 15px rgba(0, 180, 216, 0.4); 
 }
 
 /* Scrollable Container */
 .scrollable-area {
   height: 350px; 
-  width: 85%; 
+  width: 100%; 
   margin-right: auto; 
   margin-left: 0;   
   overflow-y: auto;
   position: relative;
-  padding-right: 20px; /* Keeps text away from scrollbar */
+  padding-right: 20px; 
   scrollbar-width: thin;
   scrollbar-color: #00b4d8 #e2e8f0;
 }
 
-/* Custom Scrollbar for Chrome/Safari */
+/* Custom Scrollbar */
 .scrollable-area::-webkit-scrollbar {
   width: 6px;
 }
@@ -1700,32 +1673,31 @@
 }
 
 .scroll-section {
-  /* Fixed massive bug: 10% makes text invisible. Set to standard size */
   font-size: 1rem; 
   margin-bottom: 2.5rem;
 }
 
 /* --- Responsive Layout Stack --- */
 
-/* Tablet Optimization (Prevents squishing before mobile snap) */
+/* Tablet Optimization */
 @media (max-width: 1200px) {
   .about-container {
     padding: 0 5%;
     margin-left: 5%;
   }
   .about-grid {
-    gap: 40px;
+    column-gap: 40px;
   }
 }
 
-/* Mobile & Small Tablet Snap */
+/* Mobile & Small Tablet Snap (UPDATED to reset Grid) */
 @media (max-width: 992px) {
   .home-about {
     padding: 5rem 0;
   }
   
   .about-container {
-    margin-left: auto; /* Centers container on mobile */
+    margin-left: auto; 
     margin-right: auto;
     padding: 0 2rem;
   }
@@ -1740,21 +1712,28 @@
   }
 
   .about-grid {
+    display: flex;
     flex-direction: column;
     gap: 60px;
   }
 
-  /* Reset manual heights for mobile so they look natural */
+  .about-col {
+    display: flex; /* Reverts 'contents' so they stack naturally */
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  /* Reset manual heights for mobile */
   .img-top-left,
-  .img-bot-right {
+  .about-img-box.img-bot-right {
     height: 400px;
-    width: 100%; /* Reset offset widths */
+    width: 100%; 
     right: 0;
   }
 
   .border-right {
     border-right: none;
-    border-left: 4px solid #00b4d8; /* Distinct color for mobile borders */
+    border-left: 4px solid #00b4d8; 
     padding-right: 0;
     padding-left: 30px;
     text-align: left; 
@@ -1763,11 +1742,6 @@
   .border-left {
     border-left-color: #00b4d8;
     padding-left: 30px;
-  }
-
-  .timeline-nav,
-  .scrollable-area {
-    width: 100%; /* Full width on mobile */
   }
 }
 
@@ -1780,19 +1754,19 @@
     font-size: 2rem;
   }
   .img-top-left,
-  .img-bot-right {
-    height: 300px; /* Even smaller for tiny screens */
+  .about-img-box.img-bot-right {
+    height: 300px; 
   }
 }
 
+/* --- GLOBAL RESPONSIVE FIX --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 
 /* --- Why Choose Us Section --- */
 .home-why-choose {
-  background: linear-gradient(
-    135deg,
-    #0b1a2f 40%,
-    #1a4b8c 100%
-  ); /* Dark blue with gradient accent */
+  background: linear-gradient(135deg, #0b1a2f 40%, #1a4b8c 100%); 
   color: #ffffff;
   padding: 6rem 0;
   font-family: sans-serif;
@@ -1815,12 +1789,12 @@
   flex: 0 0 35%;
   display: flex;
   gap: 20px;
-  justify-content: flex-end; /* Pushes text towards the border in reference */
+  justify-content: flex-end; 
 }
 
 .title-border {
   width: 4px;
-  background-color: #00b4d8; /* Cyan border */
+  background-color: #00b4d8; 
   border-radius: 2px;
 }
 
@@ -1834,13 +1808,8 @@
   flex-direction: column;
 }
 
-.line-white {
-  color: #ffffff;
-}
-
-.line-cyan {
-  color: #00b4d8; /* Cyan text */
-}
+.line-white { color: #ffffff; }
+.line-cyan { color: #00b4d8; }
 
 /* --- Right Side: Content & Grid --- */
 .why-content-col {
@@ -1862,31 +1831,16 @@
   display: block;
   position: relative;
   border-radius: 12px;
-  overflow: hidden; /* Keeps zoomed image inside the rounded corners */
+  overflow: hidden; 
   background-color: #d9d9d9;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 /* Positioning based on CSS Grid */
-.box-wide {
-  grid-column: 1 / 3;
-  grid-row: 1 / 2;
-}
-
-.box-sq-1 {
-  grid-column: 1 / 2;
-  grid-row: 2 / 3;
-}
-
-.box-sq-2 {
-  grid-column: 2 / 3;
-  grid-row: 2 / 3;
-}
-
-.box-tall {
-  grid-column: 3 / 4;
-  grid-row: 1 / 3;
-}
+.box-wide { grid-column: 1 / 3; grid-row: 1 / 2; }
+.box-sq-1 { grid-column: 1 / 2; grid-row: 2 / 3; }
+.box-sq-2 { grid-column: 2 / 3; grid-row: 2 / 3; }
+.box-tall { grid-column: 3 / 4; grid-row: 1 / 3; }
 
 /* Image styling and Zoom Hover Effect */
 .why-box img,
@@ -1905,7 +1859,7 @@
 /* The Hover Trigger */
 .why-box:hover img,
 .why-box:hover .placeholder-light {
-  transform: scale(1.15); /* Zooms in when hovered */
+  transform: scale(1.15); 
 }
 
 /* --- Bottom Contact Info --- */
@@ -1922,7 +1876,7 @@
   gap: 40px;
   font-size: 1.1rem;
   font-weight: 700;
-  color: #0b1a2f; /* Dark blue text */
+  color: #ffffff; /* FIXED: Changed from dark blue to white for contrast */
 }
 
 .info-item {
@@ -1932,88 +1886,100 @@
 }
 
 .info-item .arrow {
-  color: #00b4d8; /* Cyan arrow for a pop of color */
+  color: #00b4d8; 
   font-size: 1.2rem;
 }
 
 .why-btn {
-  background-color: #0b1a2f; /* Rich dark/black color */
+  background-color: #0b1a2f; 
   color: #ffffff;
   padding: 15px 45px;
-  border-radius: 50px; /* Fully rounded pill shape */
+  border-radius: 50px; 
   text-decoration: none;
   font-size: 1rem;
   font-weight: 700;
+  text-align: center;
   text-transform: uppercase;
   letter-spacing: 1px;
   transition: all 0.3s ease;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Soft drop shadow */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); 
 }
 
-/* Hover Effect */
 .why-btn:hover {
-  background-color: #00b4d8; /* Switches to cyan on hover */
-  transform: translateY(-3px); /* Slight lift effect */
+  background-color: #00b4d8; 
+  transform: translateY(-3px); 
   box-shadow: 0 15px 25px rgba(0, 180, 216, 0.3);
 }
-
 /* --- Responsive Adjustments --- */
 @media (max-width: 992px) {
   .why-layout {
     flex-direction: column;
+    /* This forces the children to stretch full width instead of shrinking to the center */
+    align-items: stretch; 
   }
 
   .why-title-col {
-    justify-content: flex-start;
+    justify-content: flex-end;
     width: 100%;
   }
 
   .why-heading {
-    text-align: left;
-    font-size: 3.5rem;
+    text-align: right;
+    font-size: 3.8rem;
+  }
+
+  .why-content-col {
+    width: 100%; /* Forces the grid container to expand */
+    margin-top: 20px;
   }
 
   .why-grid {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto auto;
+    width: 100%; /* Ensures grid takes up the new wide space */
   }
 
+  /* Increased heights so they look proportional when widened */
   .box-wide {
     grid-column: 1 / 3;
     grid-row: 1 / 2;
-    height: 150px;
+    height: 220px; 
   }
 
   .box-sq-1 {
     grid-column: 1 / 2;
     grid-row: 2 / 3;
-    height: 150px;
+    height: 200px;
   }
 
   .box-sq-2 {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
-    height: 150px;
+    height: 200px;
   }
 
   .box-tall {
     grid-column: 1 / 3;
     grid-row: 3 / 4;
-    height: 200px;
+    height: 280px; 
   }
 
   .why-bottom-info {
     flex-direction: column;
     gap: 20px;
-    align-items: flex-start;
+    align-items: flex-end; /* Aligns the button to the right to match the text */
+    margin-top: 20px;
   }
-  
 }
 
-/* --- Responsive for Mobile --- */
+/* --- Responsive for Mobile (Small Phones) --- */
 @media (max-width: 768px) {
+  .why-heading {
+    font-size: 3rem;
+  }
+
   .why-bottom-info {
-    flex-direction: column;
+    align-items: center;
     gap: 30px;
     text-align: center;
   }
@@ -2026,9 +1992,12 @@
   .why-btn {
     width: 100%; /* Makes button full width on phones */
   }
+
+  /* Shrink box heights slightly for very small screens so they don't take up the whole viewport */
+  .box-wide { height: 180px; }
+  .box-sq-1, .box-sq-2 { height: 160px; }
+  .box-tall { height: 220px; }
 }
-
-
 
 
 /* ======================================================
@@ -2132,6 +2101,46 @@
   cursor: pointer;
   transition: transform 0.3s ease, filter 0.3s ease;
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+}
+
+
+/* --- Image Background for Pills --- */
+.pill-bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit; /* Matches the curve of the pill perfectly */
+    opacity: 0; /* Hidden by default (Shows background color instead) */
+    transition: opacity 0.4s ease;
+    z-index: 0;
+}
+
+/* Add a dark tint overlay so the white text is readable over images */
+.process-pill::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4); /* 40% black overlay */
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 1;
+}
+
+/* When the pill is active, fade in the image and the dark tint */
+.process-pill.active .pill-bg-image,
+.process-pill.active::before {
+    opacity: 1;
+}
+
+/* Ensure the text and circle stay ON TOP of the image */
+.pill-text,
+.pill-circle {
+    position: relative;
+    z-index: 2;
 }
 
 /* --- Alternating Staggered Positions & Shading --- */
@@ -2242,28 +2251,85 @@ transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
   z-index: 20 !important; 
 }
 
-/* Hide descriptions on mobile screens so it doesn't break off-screen */
+/* ========================================= */
+/* --- RESPONSIVE ADJUSTMENTS (Media Queries) */
+/* ========================================= */
+
+/* TABLET (Below 1024px) */
 @media (max-width: 1024px) {
   .process-desc {
-    display: none; 
-    /* Alternatively, you can stack the text under the pills for mobile, 
-       but hiding them keeps the timeline looking clean on small screens */
+    display: none; /* Keeps descriptions hidden so they don't break horizontal boundaries */
+  }
+
+  .process-pill {
+    width: 65%; /* Shrink width so left/right offsets fit on screen */
+  }
+
+  .step-1, .step-3, .step-5 { 
+    left: -5%; 
+  }
+
+  .step-2, .step-4 { 
+    left: 40%; 
   }
 }
 
-/* --- Responsive Adjustments --- */
-@media (max-width: 600px) {
+/* MOBILE (Below 768px) */
+@media (max-width: 768px) {
+  .process-header .section-title {
+    font-size: 3rem;
+  }
+  
+  .process-interactive-area {
+    aspect-ratio: 1 / 1.5; /* Makes the box taller so pills have breathing room */
+  }
+
+  .process-pill {
+    width: 70%;
+    height: 15%; /* Scale relative height down */
+  }
+
+  /* Pull everything inward to center the timeline nicely */
+  .step-1, .step-3, .step-5 {
+    left: 5%;
+    padding-left: 15px;
+  }
+
+  .step-2, .step-4 {
+    left: 25%;
+    padding-right: 15px;
+  }
+
+  .pill-text {
+    font-size: 1.3rem;
+  }
+}
+
+/* SMALL MOBILE (Below 480px) */
+@media (max-width: 480px) {
+  .process-header {
+    margin-bottom: 4rem;
+  }
+
   .process-header .section-title {
     font-size: 2.2rem;
   }
 
   .process-interactive-area {
-    max-width: 100%;
+    aspect-ratio: 1 / 1.8; /* Extends height further for small screens */
   }
 
   .process-pill {
-    width: calc(50% + 22.5px); /* Adjusted for mobile circle size */
-    height: 70px;
+    width: 85%; /* Make pills wide and tappable */
+    height: 12%; 
+  }
+
+  /* Practically overlap them in the center so they fit perfectly */
+  .step-1, .step-3, .step-5 { 
+    left: 2%; 
+  }
+  .step-2, .step-4 { 
+    left: 13%; 
   }
   
   .pill-circle {
@@ -2272,7 +2338,7 @@ transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
   }
 
   .pill-text {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 }
 
@@ -2509,3 +2575,227 @@ transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
 }
 
 </style>
+
+
+ <!--- Hero animation --->
+
+ <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const heroSection = document.querySelector('.home-hero');
+
+    if (heroSection) {
+        // Small timeout ensures the DOM is fully painted before triggering
+        setTimeout(() => {
+            heroSection.classList.add('is-animated');
+        }, 150);
+    }
+});
+ </script>
+<style>
+
+  /* --- HERO SECTION ANIMATIONS --- */
+
+/* Initial hidden state for the text content on the left */
+.hero-text-content {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Initial hidden state for the trust cards on the right */
+.trust-card {
+    opacity: 0;
+    transform: translateY(-40px); /* Positioned higher up so they drop down */
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Staggered Drop-Down Delays for the Cards */
+.trust-card.card-1 { transition-delay: 0.2s; }
+.trust-card.card-2 { transition-delay: 0.4s; }
+.trust-card.card-3 { transition-delay: 0.6s; }
+
+/* --- Active Triggered States --- */
+.home-hero.is-animated .hero-text-content {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.home-hero.is-animated .trust-card {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+</style>
+
+
+<!--- Service Countdown Animation --->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const statsSection = document.querySelector('.stats-banner-wrapper');
+    
+    if (!statsSection) return;
+
+    let animated = false;
+
+    const animateNumbers = () => {
+        const statNums = statsSection.querySelectorAll('.stat-num');
+        
+        statNums.forEach(numElement => {
+            const originalText = numElement.textContent.trim();
+            
+            // Extract the numeric value and keep track of any trailing characters (like '+')
+            const targetNumber = parseInt(originalText.replace(/[^0-9]/g, ''), 10);
+            if (isNaN(targetNumber)) return;
+
+            const suffix = originalText.replace(/[0-9]/g, '');
+            let currentNumber = 0;
+            const duration = 2000; // Animation duration in milliseconds (2 seconds)
+            const frameRate = 30; // Milliseconds per frame
+            const totalFrames = duration / frameRate;
+            const increment = targetNumber / totalFrames;
+
+            const counter = setInterval(() => {
+                currentNumber += increment;
+                if (currentNumber >= targetNumber) {
+                    currentNumber = targetNumber;
+                    clearInterval(counter);
+                }
+                // Update text keeping any original formatting/suffixes
+                numElement.textContent = Math.floor(currentNumber).toLocaleString() + suffix;
+            }, frameRate);
+        });
+    };
+
+    // Trigger the animation when the stats banner scrolls into view
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !animated) {
+                animated = true;
+                animateNumbers();
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.3 // Triggers when 30% of the stats banner is visible
+    });
+
+    observer.observe(statsSection);
+});
+</script>
+
+
+<!-- Why Choose Us Section Animation-->
+
+<style>
+  /* --- WHY CHOOSE US TILE ANIMATIONS --- */
+
+/* Base state for all boxes before they animate */
+.home-why-choose .why-box {
+    opacity: 0;
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+
+/* 1. Top Wide Box flies in from the TOP */
+.home-why-choose .box-wide {
+    transform: translateY(-60px);
+}
+
+/* 2. Bottom Left Square flies in from the LEFT */
+.home-why-choose .box-sq-1 {
+    transform: translateX(-60px);
+}
+
+/* 3. Bottom Right Square flies in from the RIGHT */
+.home-why-choose .box-sq-2 {
+    transform: translateX(60px);
+}
+
+/* 4. Tall Right Box flies in from the BOTTOM */
+.home-why-choose .box-tall {
+    transform: translateY(60px);
+}
+
+/* --- Active Triggered States (When section becomes visible) --- */
+.home-why-choose.is-animated .why-box {
+    opacity: 1;
+    transform: translate(0, 0); /* All settle perfectly into their grid slots */
+}
+
+/* Staggered micro-delays so they cascade sequentially */
+.home-why-choose.is-animated .box-wide { transition-delay: 0.1s; }
+.home-why-choose.is-animated .box-sq-1 { transition-delay: 0.25s; }
+.home-why-choose.is-animated .box-sq-2 { transition-delay: 0.4s; }
+.home-why-choose.is-animated .box-tall { transition-delay: 0.55s; }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const whySection = document.querySelector('.home-why-choose');
+
+    if (whySection) {
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    whySection.classList.add('is-animated');
+                    observer.unobserve(entry.target); // Runs smoothly once
+                }
+            });
+        }, {
+            root: null,
+            rootMargin: '0px 0px -100px 0px',
+            threshold: 0.2 // Triggers when 20% of the section is visible
+        });
+
+        observer.observe(whySection);
+    }
+});
+</script>
+
+
+
+
+<!--  Featured Project -->
+
+<style>
+  /* --- FEATURED PROJECTS PARALLAX STYLES --- */
+.home-projects .parallax-band {
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    /* Hardware acceleration layer */
+    will-change: background-position;
+    transform: translateZ(0);
+}
+
+</style>
+<script>
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const projectsSection = document.querySelector('.home-projects');
+    
+    if (!projectsSection) return;
+
+    const parallaxBands = projectsSection.querySelectorAll('.parallax-band');
+
+    window.addEventListener('scroll', () => {
+        const rect = projectsSection.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+
+        // Check if the projects section is currently visible in the viewport
+        if (rect.top <= windowHeight && rect.bottom >= 0) {
+            // Calculate how far we've scrolled into the section (0 to 1-ish)
+            const scrollProgress = (windowHeight - rect.top) / (windowHeight + rect.height);
+            
+            parallaxBands.h((band, index) => {
+                // Different multipliers for each band create a multi-layered depth effect
+                const speed = (index + 1) * 40; 
+                const yOffset = (scrollProgress - 0.5) * speed;
+                
+                band.style.backgroundPosition = `center calc(50% + ${yOffset}px)`;
+            });
+        }
+    }, { passive: true });
+});
+
+</script>
