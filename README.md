@@ -16,23 +16,12 @@ FlowFix is a high-performance, fully custom WordPress theme built from scratch, 
 
 ![image alt](https://github.com/rickcache/FlowFix/blob/main/assests/images/Homepage.png))
 
-![image alt](https://github.com/rickcache/FlowFix/blob/f63f5130655465ad2db95a559763c92cae202e48/assests/images/About.png))
-
-![image alt](https://github.com/rickcache/FlowFix/blob/f63f5130655465ad2db95a559763c92cae202e48/assests/images/services.png)
-
-![image alt](https://github.com/rickcache/FlowFix/blob/f63f5130655465ad2db95a559763c92cae202e48/assests/images/Contact.png)
-
 ![image alt](https://github.com/rickcache/FlowFix/blob/f63f5130655465ad2db95a559763c92cae202e48/assests/images/Edit.jpeg)
 
 ### Mobile View
 
 ![image alt](https://github.com/rickcache/FlowFix/blob/f63f5130655465ad2db95a559763c92cae202e48/assests/images/phone1.png)
 
-![image alt](https://github.com/rickcache/FlowFix/blob/f63f5130655465ad2db95a559763c92cae202e48/assests/images/phone2.png)
-
-![image alt](https://github.com/rickcache/FlowFix/blob/f63f5130655465ad2db95a559763c92cae202e48/assests/images/phone3.png)
-
-![image alt](https://github.com/rickcache/FlowFix/blob/f63f5130655465ad2db95a559763c92cae202e48/assests/images/phone4.png)
 
 ## Tech Stack
 
