@@ -1062,32 +1062,28 @@
 /* Tablets (Max 1024px) */
 @media (max-width: 1024px) {
   .hero-content-wrapper {
-    flex-direction: column;
     justify-content: center;
     text-align: center;
-    padding-top: 5rem; /* Add padding so it doesn't hit the header */
+    padding: 6rem 2rem; /* Add generous top/bottom padding */
   }
 
   .hero-text-content {
     text-align: center;
     max-width: 800px;
+    margin: 0 auto; /* Perfectly centers the text block */
   }
 
   .hero-title {
     font-size: 3.5rem;
   }
-
-  .hero-trust-cards {
-    justify-content: center;
-    margin-top: 3rem;
-    flex-wrap: wrap; /* Allows cards to wrap if needed */
+  
+  .hero-subtitle {
+    margin-bottom: 2.5rem;
   }
 
-  /* Reset the steep stagger effect for a flat layout */
-  .card-1,
-  .card-2,
-  .card-3 {
-    margin-top: 0; 
+  /* THIS IS THE MAGIC BULLET: Hides the ugly stacked cards completely on tablets and smaller */
+  .hero-trust-cards {
+    display: none; 
   }
 }
 
@@ -1100,15 +1096,6 @@
   .hero-subtitle {
     font-size: 1.1rem;
   }
-
-  .hero-trust-cards {
-    gap: 20px;
-  }
-  
-  .trust-card {
-    width: 220px; /* Restore width since they will wrap */
-    height: 300px;
-  }
 }
 
 /* Small Phones (Max 480px) */
@@ -1116,24 +1103,13 @@
   .hero-title {
     font-size: 2.2rem;
   }
-
-  .hero-trust-cards {
-    flex-direction: column; 
-    align-items: center;
-    width: 100%;
-  }
-
-  .trust-card {
-    width: 100%; 
-    max-width: 280px;
-    height: 200px; /* Shorter for vertical stacking */
-  }
 }
 
 /* --- GLOBAL FIX FOR RESPONSIVE LAYOUTS --- */
 *, *::before, *::after {
   box-sizing: border-box;
 }
+
 
 /* --- SERVICES Section General --- */
 .home-services {

@@ -26,6 +26,7 @@
   display: flex;
   align-items: center;
   gap: 20px; /* Space between contact button and hamburger if both show */
+  margin-left: auto; /* <--- ADD THIS: Pushes the whole group to the far right */
 }
 
 .header-spacer {
@@ -101,6 +102,7 @@
   border: none;
   cursor: pointer;
   z-index: 1001;
+  margin-left: auto; /* <--- ADD THIS: Forces the burger to the right edge */
 }
 
 .hamburger-line {
