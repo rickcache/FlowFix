@@ -14,25 +14,25 @@ FlowFix is a high-performance, fully custom WordPress theme built from scratch, 
 
 ### Desktop View
 
-![Desktop View](image/Homepage.png)
+![Desktop View](images/Homepage.png)
 
-![Desktop View](image/About.png)
+![Desktop View](images/About.png)
 
-![Desktop View](image/services.png)
+![Desktop View](images/services.png)
 
-![Desktop View](image/Contact.png)
+![Desktop View](images/Contact.png)
 
-![Desktop View](image/Edit.png)
+![Desktop View](images/Edit.png)
 
 ### Mobile View
 
-![Desktop View](image/phone1.png)
+![Desktop View](images/phone1.png)
 
-![Desktop View](image/phone2.png)
+![Desktop View](images/phone2.png)
 
-![Desktop View](image/phone3.png)
+![Desktop View](images/phone3.png)
 
-![Desktop View](image/phone4.png)
+![Desktop View](images/phone4.png)
 
 ## Tech Stack
 
